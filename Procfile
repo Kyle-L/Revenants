@@ -1,1 +1,1 @@
-web: gunicorn -w 4 "app:create_app()"
+web: gunicorn -k flask_sockets.worker run:app
