@@ -1,7 +1,9 @@
 import os
 from flask import Blueprint, render_template, request
+from flask_socketio import SocketIO, emit
+from . import socketio
 
-app = Blueprint('app', __name__)
+app = Blueprint('main', __name__)
 
 # route and function to handle the home page
 @app.route('/')
@@ -17,3 +19,7 @@ def about():
 @app.route('/license')
 def license():
     return render_template('license.html')
+
+@socketio.on('status')
+def handle_source(json_data):
+    socketio.emit('status', {'msg': 'Someone accessed the about page'})
