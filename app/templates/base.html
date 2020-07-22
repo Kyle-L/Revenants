@@ -4,16 +4,6 @@
     ('/license', 'license', 'License')
 ] -%}
 
-{% set navigation_bar_authenticated = [
-    ('/profile', 'profile', 'Profile'),
-    ('/logout', 'logout', 'Log Out')
-] -%}
-
-{% set navigation_bar_unauthenticated = [
-    ('/login', 'login', 'Login'),
-    ('/signup', 'signup', 'Sign Up')
-] -%}
-
 {% set active_page = active_page|default('home') -%}
 
 <!doctype html>
@@ -57,24 +47,6 @@
                         <a class="nav-link" href="{{ href|e }}">{{ caption|e }}</a>
                     </li>
                     {% endfor %}
-
-                    <!-- Items that appear only if the user is authenticated. -->
-                    {% if current_user.is_authenticated %}
-                        {% for href, id, caption in navigation_bar_authenticated %}
-                        <li class="nav-item {% if id == active_page %} active {% endif %}">
-                            <a class="nav-link" href="{{ href|e }}">{{ caption|e }}</a>
-                        </li>
-                        {% endfor %}
-                    {% endif %}
-
-                    <!-- Items that appear only if the user is unauthenticated. -->
-                    {% if not current_user.is_authenticated %}
-                        {% for href, id, caption in navigation_bar_unauthenticated %}
-                        <li class="nav-item {% if id == active_page %} active {% endif %}">
-                            <a class="nav-link" href="{{ href|e }}">{{ caption|e }}</a>
-                        </li>
-                        {% endfor %}
-                    {% endif %}
                 </ul>
             </div>
         </div>
