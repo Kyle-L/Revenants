@@ -6,10 +6,17 @@
 <!-- Header -->
 <header class="jumbotron my-4">
     <h1 class="display-3">Game!</h1>
-    <li id='players'>
+    <p id='players'>
             
-    </li>
-    <button class="btn btn-primary btn-lg" onclick="send();">Call to action!</button>
+    </p>
+    <p id='timer'>
+         blah   
+    </p>
+    <button class="btn btn-primary btn-lg" onclick="start();">Call to action!</button>
 </header>
 
-{% endblock content%}n
+{% endblock content%}
+
+{% block script %}
+    <script type=text/javascript src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock script %}

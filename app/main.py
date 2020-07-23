@@ -39,27 +39,29 @@ def game():
         return redirect(url_for('.index'))
     return render_template('game.html', name=name, room=room)
 
-@socketio.on('joined', namespace='/game')
+@socketio.on('join')
 def joined(message):
     print('testing')
     room = session.get('room')
     join_room(room)
-    emit('notify_join', {'username': session.get('name')}, room=room)
+    emit('notify_join', {'data': room}, room=room)
 
 
-@socketio.on('text', namespace='/game')
+@socketio.on('play')
 def text(message):
     room = session.get('room')
     emit('message', {'msg': session.get('name') + ':' + message['msg']}, room=room)
 
 
-@socketio.on('left', namespace='/game')
+@socketio.on('left')
 def left(message):
     room = session.get('room')
     leave_room(room)
     emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
 
 
-@socketio.on('status')
+@socketio.on('start')
 def text(message):
-    print('testing2')
+    print('start')
+    room = session.get('room')
+    emit('start_timer', {'time': 1000}, room=room)
