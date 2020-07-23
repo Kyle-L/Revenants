@@ -1,7 +1,11 @@
 var socket = io.connect('https://' + document.domain + ':' + location.port);
 
-socket.on('status', function(data) {
-    document.getElementById('test').innerHTML += "Someone clicked the button, ";
+socket.on('connect', function() {
+    socket.emit('joined', {});
+});
+
+socket.on('notify_join', function(data) {
+    document.getElementById('players').innerHTML += '<il>' + test + '</il>';
 })
 
 function send(){

@@ -4,10 +4,25 @@
 {% block content %}
 
 <!-- Header -->
-<header class="jumbotron my-4">
-    <h1 class="display-3">A Warm Welcome!</h1>
-    <p class="lead" id="test">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
-    <button class="btn btn-primary btn-lg" onclick="send();">Call to action!</button>
-</header>
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Sign Up</h3>
+    <div class="box">
+        <form method="POST" action="/">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="name" name="name" placeholder="Name" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="room" name="room" placeholder="Room" autofocus="">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">Join</button>
+        </form>
+    </div>
+</div>
 
 {% endblock content%}
