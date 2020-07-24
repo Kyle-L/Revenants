@@ -4,8 +4,12 @@ socket.on('connect', function () {
     socket.emit('join', {});
 });
 
-socket.on('notify_join', function (data) {
-    document.getElementById('players').innerHTML += data['data'];
+socket.on('disconnect', function () {
+    socket.emit('leave', {});
+});
+
+socket.on('update_players', function (data) {
+    document.getElementById('players').innerHTML += data['players'];
 })
 
 
@@ -25,7 +29,7 @@ function timer() {
     count = count - 1;
     if (count <= 0) {
         document.getElementById("timer").innerHTML = 'done';
-        clearInterval(counter);
+        clearInterval(timer);
         return;
     }
 
@@ -34,6 +38,7 @@ function timer() {
 
 socket.on('start_timer', function (data) {
     count = 10;
+    clearInterval(timer);
     setInterval(timer, data['time']);
 });
 
