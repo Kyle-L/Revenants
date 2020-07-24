@@ -9,7 +9,16 @@ socket.on('disconnect', function () {
 });
 
 socket.on('update_players', function (data) {
-    document.getElementById('players').innerHTML += data['players'];
+    var list = document.getElementById('players');
+    list.innerHTML = '';
+
+    
+    data['players'].forEach(element => {
+        var entry = document.createElement('li');
+        entry.appendChild(document.createTextNode(element));
+        list.appendChild(entry);
+    });
+
 })
 
 
