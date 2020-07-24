@@ -8,9 +8,14 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 db = SQLAlchemy(app)
 
 def create_app():
-    
+    from .models import Games
+
     app.config['SECRET_KEY'] = 'secret-key-goes-here'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+
+    if 'DATABASE_URL' in os.environ:
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
     db.init_app(app)
 
