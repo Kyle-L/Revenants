@@ -25,11 +25,11 @@ def license():
 def index():
     if request.method == 'POST':
         if request.form['action'] == 'host':
-            session['name'] = request.form.get('name')
-            session['room'] = generate_room_code(4)
+            session['name'] = request.form.get('name').upper()
+            session['room'] = generate_room_code(4).upper()
         elif request.form['action'] == 'join':
-            session['name'] = request.form.get('name')
-            session['room'] = request.form.get('room')
+            session['name'] = request.form.get('name').upper()
+            session['room'] = request.form.get('room').upper()
         return redirect(url_for('.game'))
     return render_template('index.html')
 
@@ -65,8 +65,14 @@ def left():
     emit('update_players', {'players': get_players(room)}, room=room)
 
 
-@socketio.on('start')
+@socketio.on('ready')
 def text(message):
     print('start')
+    name = session.get('name')
     room = session.get('room')
-    emit('start_timer', {'time': 1000}, room=room)
+
+    player_ready(name, room)
+
+    emit('update_players', {'players': get_players(room)}, room=room)
+    if is_room_ready(room):
+        emit('start_timer', {'time': 10, 'message': 'Starting in...'}, room=room)

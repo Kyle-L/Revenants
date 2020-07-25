@@ -5,12 +5,21 @@
 
 <!-- Header -->
 <header class="jumbotron my-4">
-    <h1 class="display-3">Session ID: {{ room }}</h1>
-    <ul id='players'></ul>
+    <h3 class="card-title text-center">Room Code: {{ room }}</h3>
+    <table >
+        <thead>
+            <th>
+                Players
+            </th>
+        </thead>
+        <tbody id='players'>
+
+        </tbody>
+    </table>
     <p id='timer'>
          blah   
     </p>
-    <button class="btn btn-primary btn-lg" onclick="start();">Call to action!</button>
+    <button id="ready-button" class="btn btn-primary btn-lg" onclick="ready();">Ready!</button>
 </header>
 
 {% endblock content%}

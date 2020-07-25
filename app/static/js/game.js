@@ -11,14 +11,13 @@ socket.on('disconnect', function () {
 socket.on('update_players', function (data) {
     var list = document.getElementById('players');
     list.innerHTML = '';
-
     
     data['players'].forEach(element => {
-        var entry = document.createElement('li');
-        entry.appendChild(document.createTextNode(element));
-        list.appendChild(entry);
+        var newRow = list.insertRow();
+        var newCell  = newRow.insertCell(0);
+        var newText  = document.createTextNode(element);
+        newCell.appendChild(newText);
     });
-
 })
 
 
@@ -30,24 +29,32 @@ socket.on('update_players', function (data) {
 
 count = 0;
 
-function start() {
-    socket.emit('start', {});
+function ready() {
+    var button = document.getElementById('ready-button');
+    if (button.innerHTML == 'Ready!') {
+        button.innerHTML = 'Unready!'
+    } else {
+        button.innerHTML = 'Ready!'
+    }
+
+    socket.emit('ready', {});
 }
 
-function timer() {
+var interval
+
+function timer(message) {
     count = count - 1;
     if (count <= 0) {
         document.getElementById("timer").innerHTML = 'done';
-        clearInterval(timer);
+        clearInterval(interval);
         return;
     }
 
-    document.getElementById("timer").innerHTML = count;
+    document.getElementById("timer").innerHTML = message + ' ' + count;
 }
 
 socket.on('start_timer', function (data) {
-    count = 10;
-    clearInterval(timer);
-    setInterval(timer, data['time']);
+    count = data['time'];
+    interval = setInterval(timer, 1000, data['message']);
 });
 

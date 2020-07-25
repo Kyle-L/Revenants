@@ -6,7 +6,9 @@ class Games(db.Model):
 class Players(db.Model):
     username = db.Column(db.String(24), primary_key=True)
     code = db.Column(db.String(4), primary_key=True)
-    character_name = db.Column(db.String(24), unique=False, nullable=True)
+    ready = db.Column(db.Boolean, unique=False, nullable=False)
+    first_name = db.Column(db.String(24), unique=False, nullable=True)
+    last_name = db.Column(db.String(24), unique=False, nullable=True)
     role = db.Column(db.String(12), unique=False, nullable=True)
 
 class Weapons(db.Model):

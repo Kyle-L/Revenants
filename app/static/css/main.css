@@ -1,10 +1,16 @@
+@import url(https://fonts.googleapis.com/css2?family=PT+Serif&display=swap);
+
 html, body {
     height: 100%;
+    font-family: 'PT Serif', serif;
 }
 body {
     padding-top: 56px;
     display: flex;
     flex-direction: column;
+}
+p {
+    font-family: 'PT Serif', serif;
 }
 .content {
     flex: 1 0 auto;
