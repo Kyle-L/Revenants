@@ -4,26 +4,33 @@
 {% block content %}
 
 <!-- Header -->
-<header class="bg-main text-white jumbotron my-4">
-    <h3 class="card-title text-center">Room Code: {{ room }}</h3>
-    <table >
-        <thead>
-            <th>
-                Players
-            </th>
-        </thead>
-        <tbody id='players'>
+<header class="bg-main jumbotron my-4">
+    <h3 id="status-text" class="card-title text-center">Room Code: {{ room }}</h3>
+    <embed src="{{ url_for('static', filename='sound/music.mp3') }}" autostart="true" loop="true" width="2" height="0">
+    </embed>
 
-        </tbody>
-    </table>
-    <p id='timer'>
-         blah   
-    </p>
-    <button id="ready-button" class="btn btn-primary btn-lg" onclick="ready();">Ready!</button>
+    <div id="join-room">
+        <table class="table text-white">
+            <thead>
+                <th scope="col">Players</th>
+            </thead>
+            <tbody id="players">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="round-1">
+        <p>
+            Some fun text or something goes here.
+        </p>
+    </div>
+
+    <button id="ready-button" class="btn button btn-lg" onclick="ready();">Ready!</button>
 </header>
 
-{% endblock content%}
+{% endblock %}
 
 {% block script %}
-    <script type=text/javascript src="{{ url_for('static', filename='js/game.js') }}"></script>
-{% endblock script %}
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

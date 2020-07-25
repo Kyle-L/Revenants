@@ -8,15 +8,34 @@ body {
     padding-top: 56px;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(-45deg, #231942, #5e548e, #9f86c0);
+    background: linear-gradient(-45deg, #212d40, #364156, #7d4e57, #d66853);
 	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
+    animation: gradient 10s ease infinite;
+    color: white;
 }
 
 /* Modify the backgorund color */ 
 .bg-main { 
-    background-color: #2c223b; 
-} 
+    background-color: #11151c; 
+}
+
+.button {
+    background-color: #7d4e57;
+    color: white;
+}
+
+.button:hover {
+    background-color: #364156;
+    color: #cacaca;
+}
+
+a {
+    color: #d66853;
+}
+
+a:hover {
+    color: #7d4e57;
+}
 
 p {
     font-family: 'PT Serif', serif;

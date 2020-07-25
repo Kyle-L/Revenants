@@ -43,31 +43,39 @@ def game():
 
 @socketio.on('join')
 def joined(message):
+    # Gets the player's name and room.
     name = session.get('name')
     room = session.get('room')
+    
+    # Adds a player to the socketio room session.
     join_room(room)
 
+    # Adds a player from the database.
     player_join(name, room)
     
-    print(get_players(room))
+    print(f'{name} has joined room {room}')
 
     emit('update_players', {'players': get_players(room)}, room=room)
 
 @socketio.on('disconnect')
 def left():
+    # Gets the player's name and room.
     name = session.get('name')
     room = session.get('room')
+    
+    # Removes a player to the socketio room session.
     leave_room(room)
 
-    # Removes a player from firebase.
+    # Removes a player from the database.
     player_leave(name, room)
+
+    print(f'{name} has left room {room}')
     
     emit('update_players', {'players': get_players(room)}, room=room)
 
 
 @socketio.on('ready')
 def text(message):
-    print('start')
     name = session.get('name')
     room = session.get('room')
 

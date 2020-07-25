@@ -1,0 +1,16 @@
+{
+    "roles": {
+        "regulars": "Innocent",
+        "questionables": "Accomplice",
+        "antagonist": "Murder"
+    },
+    "weapons": {
+        "axe": "dismembered",
+        "shotgun": "shot",
+        "pistol": "shot",
+        "baseball bat": "beaten"
+    },
+    "locations": {
+        
+    }
+}

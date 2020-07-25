@@ -4,8 +4,8 @@
 {% block content %}
 
 <!-- Header -->
-<div class="bg-main text-white jumbotron my-4">
-	<h4 class="card-title text-center">Host a Session</h4>
+<div class="bg-main jumbotron my-4">
+	<h4 class="card-title text-center">Host a Game</h4>
 	<div class="card-text">
 		<form method="POST" action="/">
 			<div class="form-group">
@@ -13,14 +13,14 @@
 				<input class="form-control form-control-sm" style="text-transform: uppercase" type="name" name="name"
 					placeholder="Enter your name" autofocus="">
 			</div>
-			<button type="submit" class="btn btn-primary btn-block" style="text-transform: uppercase" name="action"
+			<button type="submit" class="btn button btn-block" style="text-transform: uppercase" name="action"
 				value="host">Host</button>
 		</form>
 	</div>
 </div>
 
-<div class="bg-main text-white jumbotron my-4">
-	<h4 class="card-title text-center">Join a Session</h4>
+<div class="bg-main jumbotron my-4">
+	<h4 class="card-title text-center">Join a Game</h4>
 	<div class="card-text">
 		<form method="POST" action="/">
 			<div class="form-group">
@@ -31,9 +31,9 @@
 			<div class="form-group">
 				<label for="room code">Room Code</label>
 				<input class="form-control form-control-sm" style="text-transform: uppercase" type="room" name="room"
-					placeholder="Enter your name" autofocus="">
+					placeholder="Enter a 4 digit room code" autofocus="">
 			</div>
-			<button type="submit" class="btn btn-primary btn-block" name="action" value="join">Join</button>
+			<button type="submit" class="btn button btn-block" name="action" value="join">Join</button>
 		</form>
 	</div>
 </div>
