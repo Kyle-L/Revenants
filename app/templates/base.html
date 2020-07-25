@@ -14,6 +14,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -37,9 +39,9 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-main fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="/">Coxcombs</a>
+            <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='favicon.svg') }}" style="height: 1em;"> Coxcombs</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -69,8 +71,7 @@
     <!-- Footer Content -->
     <footer class="footer">
         <div class="container">
-            <p class="m-0 text-muted">Copyright &copy; Your Website 2020</p>
-            <a class="m-0 text-muted" href="https://github.com/Kyle-L/Flask-Template"><i class="fa fa-github" aria-hidden="true"></i> View Source</a>
+            <a class="m-0 text-light" href="https://github.com/Kyle-L/Coxcombs"><i class="fa fa-github" aria-hidden="true"></i> View Source</a>
         </div>
     </footer>
     <!-- End Footer Content -->
