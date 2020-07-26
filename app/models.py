@@ -5,10 +5,11 @@ class Rooms(db.Model):
     game_state = db.Column(db.String(12), unique=False, nullable=True, default='lobby')
 
 class Players(db.Model):
-    username = db.Column(db.String(24), primary_key=True)
-    code = db.Column(db.String(4), primary_key=True)
+    id = db.Column(db.String(64), primary_key=True)
+    username = db.Column(db.String(24), unique=False, nullable=False, default=False)
+    code = db.Column(db.String(4), unique=False, nullable=False, default=False)
     ready = db.Column(db.Boolean, unique=False, nullable=False, default=False)
-    role = db.Column(db.String(12), unique=False, nullable=False, default='villagers')
+    role = db.Column(db.String(12), unique=False, nullable=False, default='villager')
     alive = db.Column(db.Boolean, unique=False, nullable=False, default=True)
     chosen_player = db.Column(db.String(12), unique=False, nullable=True)
 

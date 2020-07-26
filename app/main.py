@@ -7,7 +7,6 @@ from .database import *
 
 app = Blueprint('main', __name__)
 
-
 # route and function to handle the license page
 @app.route('/how-to-play')
 def how_to_play():
@@ -18,9 +17,7 @@ def how_to_play():
 def license():
     return render_template('license.html')
 
-
-
-
+# TODO: Add error checking for names and rooms.
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -51,11 +48,11 @@ def joined(message):
     join_room(room)
 
     # Adds a player from the database.
-    player_join(name, room)
+    player_join(request.sid, name, room)
     
     print(f'{name} has joined room {room}')
 
-    emit('update_players', {'players': get_players(room)}, room=room)
+    emit('update_players', {'players': get_players_string(room)}, room=room)
 
 @socketio.on('disconnect')
 def left():
@@ -63,55 +60,94 @@ def left():
     name = session.get('name')
     room = session.get('room')
     
+    player = get_player(request.sid)
+
     # Removes a player to the socketio room session.
     leave_room(room)
 
     # Removes a player from the database.
-    player_leave(name, room)
+    player_leave(request.sid)
 
     print(f'{name} has left room {room}')
     
-    emit('update_players', {'players': get_players(room)}, room=room)
+    emit('update_players', {'players': get_players_string(room)}, room=room)
 
 
 @socketio.on('ready')
-def text(message):
+def ready(message):
     name = session.get('name')
     room = session.get('room')
 
-    player_ready(name, room)
+    player_ready(request.sid)
     state = get_room_state(room)
-
-    player = get_player(name, room)
 
     if state == 'night':
         print(True)
     elif state == 'day':
         print(True)
     elif  state == 'lobby':
-        emit('update_players', {'players': get_players(room)}, room=room)
+        emit('update_players', {'players': get_players_string(room)}, room=room)
     
     if is_room_ready(room):
+        unready_all_players(room)
+
         if state == 'lobby':
-            update_room_state(room, 'night')
-            payload = {
-                'time': 10, 
-                'message': 'Game starting in...',
-                'state': 'Night'
-            }
+            lobby_finished(room)
+        elif state == 'setup':
+            setup_finished(room)
         elif state == 'night':
-            update_room_state(room, 'day')
-            payload = {
-                'time': 10, 
-                'message': 'Day starting in...',
-                'state': 'Day'
-            }
+            night_finished(room)
         elif state == 'day':
-            update_room_state(room, 'night')
-            payload = {
-                'time': 10, 
-                'message': 'Night starting in...',
-                'state': 'Night'
-            }
+            day_finished(room)
             
-        emit('start_timer', payload, room=room)
+    
+
+def lobby_finished(room):
+    print(f'Room {room} finished lobby.')
+
+    assign_roles(room)
+    update_room_state(room, 'setup')
+    players = get_players(room)
+    for player in players:
+        payload = {
+            'time': 10, 
+            'message': 'Game starting in...',
+            'state': 'Set Up',
+            'role': player.role
+            'role_description': 
+        }
+        emit('start_timer', payload, room=player.id)
+
+def setup_finished(room):
+    print(f'Room {room} finished setup.')
+
+    update_room_state(room, 'setup')
+    payload = {
+        'time': 10, 
+        'message': 'Day starting in...',
+        'state': 'Day'
+    }
+    return payload
+
+def night_finished(room):
+    print(f'Room {room} finished night.')
+
+    update_room_state(room, 'day')
+    payload = {
+        'time': 10, 
+        'message': 'Day starting in...',
+        'state': 'Day'
+    }
+    return payload
+
+def day_finished(room):
+    update_room_state(room, 'night')
+    payload = {
+        'time': 10, 
+        'message': 'Night starting in...',
+        'state': 'Night'
+    }
+    return payload
+
+def end(room):
+    print(True)

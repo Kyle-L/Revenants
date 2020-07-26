@@ -54,6 +54,6 @@ function timer(message, end) {
 
 socket.on("start_timer", function (data) {
     count = data["time"];
-    interval = setInterval(timer, 1000, data["message"], data["state"]);
+    interval = setInterval(timer, 1000, data["message"], data["state"] + ": " + data["role"]);
 });
 
