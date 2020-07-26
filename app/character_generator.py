@@ -20,4 +20,4 @@ print(f'Name: {first_name} {last_name}')
 print(f'Pronouns: {pronouns}')
 print(f'Occupation: {retired}{occupation}')
 
-print(f'You are {first_name} {last_name} who is in their {age_string} and a {occupation.lower()} .')
+print(f'You are {first_name} {last_name}. who is in their {age_string} and a {occupation.lower()} .')

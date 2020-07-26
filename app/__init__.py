@@ -8,7 +8,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 db = SQLAlchemy(app)
 
 def create_app():
-    from .models import Games
+    from .models import Rooms
 
     app.config['SECRET_KEY'] = 'secret-key-goes-here'
 

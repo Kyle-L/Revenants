@@ -19,6 +19,10 @@ body {
     background-color: #11151c; 
 }
 
+.bg-second { 
+    background-color: #7d4e57; 
+}
+
 .button {
     background-color: #7d4e57;
     color: white;

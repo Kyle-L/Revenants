@@ -1,8 +1,9 @@
 {
     "roles": {
-        "regulars": "Innocent",
-        "questionables": "Accomplice",
-        "antagonist": "Murder"
+        "villagers": ["Baker"],
+        "healer": "Doctor",
+        "prophet": "Fortune Teller",
+        "antagonist": "Wolf"
     },
     "weapons": {
         "axe": "dismembered",

@@ -80,7 +80,38 @@ def text(message):
     room = session.get('room')
 
     player_ready(name, room)
+    state = get_room_state(room)
 
-    emit('update_players', {'players': get_players(room)}, room=room)
+    player = get_player(name, room)
+
+    if state == 'night':
+        print(True)
+    elif state == 'day':
+        print(True)
+    elif  state == 'lobby':
+        emit('update_players', {'players': get_players(room)}, room=room)
+    
     if is_room_ready(room):
-        emit('start_timer', {'time': 10, 'message': 'Starting in...'}, room=room)
+        if state == 'lobby':
+            update_room_state(room, 'night')
+            payload = {
+                'time': 10, 
+                'message': 'Game starting in...',
+                'state': 'Night'
+            }
+        elif state == 'night':
+            update_room_state(room, 'day')
+            payload = {
+                'time': 10, 
+                'message': 'Day starting in...',
+                'state': 'Day'
+            }
+        elif state == 'day':
+            update_room_state(room, 'night')
+            payload = {
+                'time': 10, 
+                'message': 'Night starting in...',
+                'state': 'Night'
+            }
+            
+        emit('start_timer', payload, room=room)

@@ -26,12 +26,6 @@ socket.on("update_players", function (data) {
 })
 
 
-
-
-
-
-
-
 count = 0;
 
 function ready() {
@@ -46,10 +40,11 @@ function ready() {
 
 var interval
 
-function timer(message) {
+function timer(message, end) {
     if (count <= 0) {
         $("#join-room").fadeOut();
         $("#round-1").delay(1000).fadeIn();
+        $("#status-text").html(end);
         clearInterval(interval);
         return;
     }
@@ -59,6 +54,6 @@ function timer(message) {
 
 socket.on("start_timer", function (data) {
     count = data["time"];
-    interval = setInterval(timer, 1000, data["message"]);
+    interval = setInterval(timer, 1000, data["message"], data["state"]);
 });
 
