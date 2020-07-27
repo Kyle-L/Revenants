@@ -1,9 +1,15 @@
-$( document ).ready(function() {
-    $("#join-room").show();
-    $("#setup").hide();
-});
-
+var states = ["lobby", "setup", "night", "day", "end"]
+var interval
+var count = 0
 var socket = io.connect();
+
+$(document).ready(function () {
+    $("#ready-status").hide();
+    states.forEach(element => {
+        $("#" + element).hide();
+    })
+    $("#lobby").show();
+});
 
 socket.on("connect", function () {
     socket.emit("join", {});
@@ -16,59 +22,70 @@ socket.on("disconnect", function () {
 socket.on("update_players", function (data) {
     var list = document.getElementById("players");
     list.innerHTML = "";
-    
+
     data["players"].forEach(element => {
         var newRow = list.insertRow();
-        var newCell  = newRow.insertCell(0);
-        var newText  = document.createTextNode(element);
+        var newCell = newRow.insertCell(0);
+        var newText = document.createTextNode(element);
         newCell.appendChild(newText);
     });
 })
 
-
-count = 0;
-
-function ready() {
-    if ($("#ready-button").html() == "Ready!") {
-        $("#ready-button").html("Not ready!")
-    } else {
-        $("#ready-button").html("Ready!")
-    }
-
-    socket.emit("ready", {});
-}
-
-var interval
-
-function timer(message, status, fadeIn) {
-    if (count <= 0) {
-        $("#" + fadeIn).fadeIn();
-        $("#status-text").html(status);
-
-        $("#ready-button").fadeIn()
-        $("#ready-button").html("Ready!")
-
-        clearInterval(interval);
-        return;
-    }
-    $("#status-text").html(message + " " + count);
-    count = count - 1;
-}
+socket.on("update_done", function (data) {
+    $("#ready-status").fadeIn();
+    $("#ready-status").html(data["players"])
+})
 
 socket.on("start_round", function (data) {
-    $("#ready-button").fadeOut()
+    $("#ready-button").fadeOut();
+    $("#ready-status").fadeOut();
+    states.forEach(element => {
+        $("#" + element).fadeOut();
+    })
     count = data["time"];
-    interval = setInterval(timer, 1000, data["message"], data["state"]);
+    interval = setInterval(timer, 100, data["message"], data["state"], data["state_name"]);
 });
 
 socket.on("start_setup", function (data) {
     $("#ready-button").fadeOut();
-    $("#join-room").fadeOut();
+    $("#lobby").fadeOut();
 
     $("#role-name").html("You are a " + data['role'] + "!");
     $("#role-description").html(data['role_description']);
 
     count = data["time"];
-    interval = setInterval(timer, 1000, data["message"], data["state"], "setup");
+    interval = setInterval(timer, 100, data["message"], data["state"], data["state_name"]);
 });
+
+function setState(state, stateStatus) {
+    $("#status-text").html(stateStatus);
+    $("#ready-button").html("I am ready!");
+    $("#ready-button").fadeIn();
+    states.forEach(element => {
+        if (element === state) {
+            $("#" + state).fadeIn()
+        }
+    });
+}
+
+
+function ready() {
+    if ($("#ready-button").html() == "I am ready!") {
+        $("#ready-button").html("I am not ready!")
+    } else {
+        $("#ready-button").html("I am ready!")
+    }
+
+    socket.emit("ready", {});
+}
+
+function timer(message, state, stateName) {
+    if (count <= 0) {
+        setState(state, stateName)
+        clearInterval(interval);
+        return;
+    }
+    $("#status-text").html(message + " " + count);
+    count = (count - 0.1).toFixed(1);
+}
 

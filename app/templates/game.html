@@ -5,44 +5,49 @@
 
 <!-- Header -->
 <header class="bg-main jumbotron my-4">
-    <h3 id="status-text" class="card-title text-center">Room Code: {{ room }}</h3>
-    <embed src="{{ url_for('static', filename='sound/music.mp3') }}" autostart="true" loop="true" width="2" height="0">
-    </embed>
+  <h3 id="status-text" class="card-title text-center">Room Code: {{ room }}</h3>
+  <embed src="{{ url_for('static', filename='sound/music.mp3') }}" autostart="true" loop="true" width="2" height="0">
+  </embed>
 
-    <div id="join-room">
-        <table class="table text-white">
-            <thead>
-                <th scope="col">Players</th>
-            </thead>
-            <tbody id="players">
+  <div id="lobby" class="hidden">
+    <table class="table text-white">
+      <thead>
+        <th scope="col">Players</th>
+      </thead>
+      <tbody id="players">
 
-            </tbody>
-        </table>
-    </div>
-
-    <div id="setup">
-      <p id="role-name"></p>
-      <p id="role-description"></p>
+      </tbody>
+    </table>
   </div>
 
-    <!-- <div>
-        <div class="container">
-            <div class="row">
-              <div class="col jumbotron my-4 bg-second">
-                1 of 2
-              </div>
-              <div class="col jumbotron my-4 bg-second">
-                2 of 2
-              </div>
-            </div>
-          </div>
-    </div> -->
+  <div id="setup" class="hidden">
+    <p id="role-name"></p>
+    <p id="role-description"></p>
+  </div>
 
-    <button id="ready-button" class="btn button btn-lg" onclick="ready();">Ready!</button>
+  <div id="night" class="hidden">
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+  </div>
+
+  <div id="day" class="hidden">
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="" class="btn button btn-lg" onclick="ready();">Ready!</button>
+  </div>
+
+  <button id="ready-button" class="btn button btn-lg" onclick="ready();">Ready!</button>
+  <p id="ready-status"></p>
+
 </header>
 
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
 {% endblock %}

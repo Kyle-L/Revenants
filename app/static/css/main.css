@@ -1,26 +1,31 @@
 @import url(https://fonts.googleapis.com/css2?family=PT+Serif&display=swap);
-
 html, body {
     height: 100%;
     font-family: 'PT Serif', serif;
 }
+
 body {
     padding-top: 56px;
     display: flex;
     flex-direction: column;
     background: linear-gradient(-45deg, #212d40, #364156, #7d4e57, #d66853);
-	background-size: 400% 400%;
+    background-size: 400% 400%;
     animation: gradient 10s ease infinite;
     color: white;
 }
 
-/* Modify the backgorund color */ 
-.bg-main { 
-    background-color: #11151c; 
+.navbar-brand {
+    font-size: 26px;
 }
 
-.bg-second { 
-    background-color: #7d4e57; 
+/* Modify the backgorund color */
+
+.bg-main {
+    background-color: #11151c;
+}
+
+.bg-second {
+    background-color: #7d4e57;
 }
 
 .button {
@@ -44,22 +49,28 @@ a:hover {
 p {
     font-family: 'PT Serif', serif;
 }
+
 .content {
     flex: 1 0 auto;
 }
+
 .footer {
     flex-shrink: 0;
     padding-bottom: 20px;
 }
 
+div.hidden {
+    display: none
+}
+
 @keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }

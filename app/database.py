@@ -69,9 +69,19 @@ def get_players_string(room: str) -> list:
     instance = Players.query.filter(Players.code == room).all()
     for player in instance:
         ready = '(READY)'if player.ready == True else '(NOT READY)'
-        li.append(f'{player.username} {ready} {player.role}')
+        li.append(f'{player.username} {ready}')
     return li
 
+
+def get_ready_count_string(room: str) -> str:
+    player_count = 0
+    ready_count = 0
+    players = get_players(room)
+    for player in players:
+        player_count += 1
+        if player.ready:
+            ready_count += 1
+    return f'{ready_count}/{player_count}'
 
 def get_room_state(room: str):
     return Rooms.query.filter(Rooms.code == room).first().game_state

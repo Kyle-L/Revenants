@@ -90,13 +90,14 @@ def ready(message):
     player_ready(request.sid)
     state = get_room_state(room)
 
-    if state == 'night':
-        print(True)
+    if state == 'setup':
+        emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
+    elif state == 'night':
+        emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
     elif state == 'day':
-        print(True)
+        emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
     elif state == 'lobby':
-        emit('update_players', {
-             'players': get_players_string(room)}, room=room)
+        emit('update_players', {'players': get_players_string(room)}, room=room)
 
     if is_room_ready(room):
         unready_all_players(room)
@@ -119,9 +120,10 @@ def lobby_finished(room):
     players = get_players(room)
     for player in players:
         payload = {
-            'time': 10,
+            'time': 5,
             'message': 'Game starting in...',
-            'state': 'Set Up',
+            'state': 'setup',
+            'state_name': 'Set Up',
             'role': get_role_name(player.role),
             'role_description': get_role_description(player.role)
         }
@@ -133,9 +135,10 @@ def setup_finished(room):
 
     update_room_state(room, 'night')
     payload = {
-        'time': 10,
+        'time': 5,
         'message': 'Night starting in...',
-        'state': 'Night'
+        'state': 'night',
+        'state_name': 'Night'
     }
     emit('start_round', payload, room=room)
 
@@ -145,9 +148,10 @@ def night_finished(room):
 
     update_room_state(room, 'day')
     payload = {
-        'time': 10,
+        'time': 5,
         'message': 'Day starting in...',
-        'state': 'Day'
+        'state': 'day',
+        'state_name': 'Day',
     }
     emit('start_round', payload, room=room)
 
@@ -155,9 +159,10 @@ def night_finished(room):
 def day_finished(room):
     update_room_state(room, 'night')
     payload = {
-        'time': 10,
+        'time': 5,
         'message': 'Night starting in...',
-        'state': 'Night'
+        'state': 'night',
+        'state_name': 'Night',
     }
     emit('start_round', payload, room=room)
 
