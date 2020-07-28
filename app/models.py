@@ -2,7 +2,7 @@ from . import db
 
 class Rooms(db.Model):
     code = db.Column(db.String(4), primary_key=True)
-    game_state = db.Column(db.String(12), unique=False, nullable=True, default='lobby')
+    game_state = db.Column(db.String(12), unique=False, nullable=False, default='lobby')
 
 class Players(db.Model):
     id = db.Column(db.String(64), primary_key=True)

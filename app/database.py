@@ -15,7 +15,7 @@ def player_join(sid: str, name: str, room: str):
     instance = Rooms.query.filter(Rooms.code == room).first()
     if not instance:
         game = Rooms(code=room)
-        ses.add(game)
+        ses.add(game, 'lobby')
 
     ses.commit()
 
@@ -59,12 +59,14 @@ def is_room_ready(room: str) -> bool:
 def get_player(sid: str):
     return Players.query.filter(Players.id == sid).first()
 
+def get_player_from_name(name: str, room: str):
+    return Players.query.filter(Players.username == name, Players.code==room).first()
 
 def get_players(room: str):
     return Players.query.filter(Players.code == room).all()
 
 
-def get_players_string(room: str) -> list:
+def get_players_string_lobby(room: str) -> list:
     li = []
     instance = Players.query.filter(Players.code == room).all()
     for player in instance:
@@ -72,6 +74,13 @@ def get_players_string(room: str) -> list:
         li.append(f'{player.username} {ready}')
     return li
 
+def get_players_string(room: str) -> list:
+    li = []
+    instance = Players.query.filter(Players.code == room).all()
+    for player in instance:
+        if player.alive: 
+            li.append(f'{player.username}')
+    return li
 
 def get_ready_count_string(room: str) -> str:
     player_count = 0
@@ -83,8 +92,11 @@ def get_ready_count_string(room: str) -> str:
             ready_count += 1
     return f'{ready_count}/{player_count}'
 
+
 def get_room_state(room: str):
-    return Rooms.query.filter(Rooms.code == room).first().game_state
+    state = 'n/a'
+    room = Rooms.query.filter(Rooms.code == room).first()
+    return room.game_state if room else state
 
 
 def update_room_state(room: str, state: str):

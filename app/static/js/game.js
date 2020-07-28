@@ -1,4 +1,4 @@
-var states = ["lobby", "setup", "night", "day", "end"]
+var states = ["lobby", "setup", "results", "round", "end"]
 var interval
 var count = 0
 var socket = io.connect();
@@ -37,13 +37,23 @@ socket.on("update_done", function (data) {
 })
 
 socket.on("start_round", function (data) {
+    // Found out last state.
     $("#ready-button").fadeOut();
     $("#ready-status").fadeOut();
     states.forEach(element => {
         $("#" + element).fadeOut();
     })
+
+    // Add round radio boxes.
+    var list = ''
+    data["players"].forEach(element => {
+        list += '<label class="radio-container">' + element +'<input type="radio" checked="checked" name="radio"><span class="checkmark"></span></label>';
+    });
+    $("#" + data["state_html"]).html(list);
+
+    // Start the timer.
     count = data["time"];
-    interval = setInterval(timer, 100, data["message"], data["state"], data["state_name"]);
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"]);
 });
 
 socket.on("start_setup", function (data) {
@@ -54,7 +64,22 @@ socket.on("start_setup", function (data) {
     $("#role-description").html(data['role_description']);
 
     count = data["time"];
-    interval = setInterval(timer, 100, data["message"], data["state"], data["state_name"]);
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"]);
+});
+
+socket.on("results", function (data) {
+    // Found out last state.
+    $("#ready-button").fadeOut();
+    $("#ready-status").fadeOut();
+    states.forEach(element => {
+        $("#" + element).fadeOut();
+    })
+
+    $("round-results")
+
+    // Start the timer.
+    count = data["time"];
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"]);
 });
 
 function setState(state, stateStatus) {

@@ -31,8 +31,17 @@ def index():
             session['name'] = request.form.get('name').upper()
             session['room'] = generate_room_code(4).upper()
         elif request.form['action'] == 'join':
-            session['name'] = request.form.get('name').upper()
-            session['room'] = request.form.get('room').upper()
+            name = request.form.get('name').upper()
+            room = request.form.get('room').upper()
+
+            # If there is already a player with that name, redirect to index.
+            state = get_room_state(room)
+            if get_player_from_name(name, room) or (state != 'n/a' and state != 'lobby'):
+                return render_template('index.html', error_message='blah')
+
+            session['name'] = name
+            session['room'] = room
+            
         return redirect(url_for('.game'))
     return render_template('index.html')
 
@@ -43,6 +52,12 @@ def game():
     room = session.get('room', '')
     if name == '' or room == '':
         return redirect(url_for('.index'))
+    
+    # If there is already a player with that name, redirect to index.
+    state = get_room_state(room)
+    if get_player_from_name(name, room) or (state != 'n/a' and state != 'lobby'):
+        return redirect(url_for('.index'))
+
     return render_template('game.html', name=name, room=room)
 
 
@@ -58,9 +73,9 @@ def joined(message):
     # Adds a player from the database.
     player_join(request.sid, name, room)
 
-    print(f'{name} has joined room {room}')
+    print(f'[{room}] {name} joined.')
 
-    emit('update_players', {'players': get_players_string(room)}, room=room)
+    emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
 
 
 @socketio.on('disconnect')
@@ -77,9 +92,9 @@ def left():
     # Removes a player from the database.
     player_leave(request.sid)
 
-    print(f'{name} has left room {room}')
+    print(f'[{room}] {name} left.')
 
-    emit('update_players', {'players': get_players_string(room)}, room=room)
+    emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
 
 
 @socketio.on('ready')
@@ -90,30 +105,30 @@ def ready(message):
     player_ready(request.sid)
     state = get_room_state(room)
 
-    if state == 'setup':
+    if state == 'lobby':
+        emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
+    else:
         emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
-    elif state == 'night':
-        emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
-    elif state == 'day':
-        emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
-    elif state == 'lobby':
-        emit('update_players', {'players': get_players_string(room)}, room=room)
 
     if is_room_ready(room):
         unready_all_players(room)
 
         if state == 'lobby':
-            lobby_finished(room)
+            start_setup(room)
         elif state == 'setup':
-            setup_finished(room)
+            start_night(room)
         elif state == 'night':
-            night_finished(room)
+            process_choices_night(room)
+        elif state == 'night-results':
+            start_day(room)
         elif state == 'day':
-            day_finished(room)
+            process_choices_day(room)
+        elif state == 'day-results':
+            start_night(room)
 
 
-def lobby_finished(room):
-    print(f'Room {room} finished lobby.')
+def start_setup(room):
+    print(f'[{room}] Starting setup.')
 
     assign_roles(room)
     update_room_state(room, 'setup')
@@ -122,50 +137,72 @@ def lobby_finished(room):
         payload = {
             'time': 5,
             'message': 'Game starting in...',
-            'state': 'setup',
+            'state_html': 'setup',
             'state_name': 'Set Up',
             'role': get_role_name(player.role),
-            'role_description': get_role_description(player.role)
+            'role_description': get_role_description(player.role),
         }
         emit('start_setup', payload, room=player.id)
 
 
-def setup_finished(room):
-    print(f'Room {room} finished setup.')
-
-    update_room_state(room, 'night')
-    payload = {
-        'time': 5,
-        'message': 'Night starting in...',
-        'state': 'night',
-        'state_name': 'Night'
-    }
-    emit('start_round', payload, room=room)
-
-
-def night_finished(room):
-    print(f'Room {room} finished night.')
+def start_day(room):
+    print(f'[{room}] Starting day.')
 
     update_room_state(room, 'day')
     payload = {
         'time': 5,
         'message': 'Day starting in...',
-        'state': 'day',
+        'state_html': 'round',
         'state_name': 'Day',
+        'players': get_players_string(room),
     }
     emit('start_round', payload, room=room)
 
 
-def day_finished(room):
+def start_night(room):
+    print(f'[{room}] Starting night.')
+
     update_room_state(room, 'night')
     payload = {
         'time': 5,
         'message': 'Night starting in...',
-        'state': 'night',
+        'state_html': 'round',
         'state_name': 'Night',
+        'players': get_players_string(room),
     }
     emit('start_round', payload, room=room)
 
-
 def end(room):
     print(True)
+
+def process_choices_night(room):
+    print(f'[{room}] Showing night results.')
+
+    update_room_state(room, 'night-results')
+
+    players = get_players(room)
+    for player in players:
+        payload = {
+            'time': 5,
+            'message': 'Night results showing in...',
+            'state_html': 'results',
+            'state_name': 'Night Results',
+            'results': 'TODO: ADD FOR EACH PERSON - Night'
+        }
+    emit('results', payload, room=room)
+
+def process_choices_day(room):
+    print(f'[{room}] Showing day results.')
+
+    update_room_state(room, 'day-results')
+
+    players = get_players(room)
+    for player in players:
+        payload = {
+            'time': 5,
+            'message': 'Day results showing in...',
+            'state_html': 'results',
+            'state_name': 'Day Results',
+            'results': 'TODO: ADD FOR EACH PERSON - Day'
+        }
+    emit('results', payload, room=room)
