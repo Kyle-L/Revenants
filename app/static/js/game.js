@@ -4,6 +4,7 @@ var count = 0
 var socket = io.connect();
 
 $(document).ready(function () {
+    $("#game").fadeIn();
     $("#ready-status").hide();
     states.forEach(element => {
         $("#" + element).hide();
@@ -46,14 +47,16 @@ socket.on("start_round", function (data) {
 
     // Add round radio boxes.
     var list = ''
-    data["players"].forEach(element => {
-        list += '<label class="radio-container">' + element +'<input type="radio" checked="checked" name="radio"><span class="checkmark"></span></label>';
+    list += '<label class="radio-container">' + data["players"][0] +'<input type="radio" name="radio" checked="checked" value="' + data["players"][0] + '"><span class="checkmark"></span></label>';
+    data["players"].forEach((element, index) => {
+        if (index < 1) return;
+        list += '<label class="radio-container">' + element +'<input type="radio" name="radio" value="' + element + '"><span class="checkmark"></span></label>';
     });
     $("#" + data["state_html"]).html(list);
 
     // Start the timer.
     count = data["time"];
-    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"]);
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"]);
 });
 
 socket.on("start_setup", function (data) {
@@ -64,7 +67,7 @@ socket.on("start_setup", function (data) {
     $("#role-description").html(data['role_description']);
 
     count = data["time"];
-    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"]);
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"]);
 });
 
 socket.on("results", function (data) {
@@ -75,17 +78,24 @@ socket.on("results", function (data) {
         $("#" + element).fadeOut();
     })
 
-    $("round-results")
+    $("#results-text").html(data['results'])
+    if (data['win']) {
+        $("#win-text").show();
+        $("#win-text").html(data['win_message']);
+
+    }
 
     // Start the timer.
     count = data["time"];
-    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"]);
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"] || data['win']);
 });
 
-function setState(state, stateStatus) {
+function setState(state, stateStatus, alive) {
     $("#status-text").html(stateStatus);
-    $("#ready-button").html("I am ready!");
-    $("#ready-button").fadeIn();
+    if (alive) {
+        $("#ready-button").html("I am ready!");
+        $("#ready-button").fadeIn();
+    }
     states.forEach(element => {
         if (element === state) {
             $("#" + state).fadeIn()
@@ -101,12 +111,12 @@ function ready() {
         $("#ready-button").html("I am ready!")
     }
 
-    socket.emit("ready", {});
+    socket.emit("ready", {"chosen_player": $('input[name="radio"]:checked').val()});
 }
 
-function timer(message, state, stateName) {
+function timer(message, state, stateName, alive) {
     if (count <= 0) {
-        setState(state, stateName)
+        setState(state, stateName, alive)
         clearInterval(interval);
         return;
     }

@@ -5,53 +5,57 @@
 
 <!-- Header -->
 <header class="bg-main jumbotron my-4">
-  <h3 id="status-text" class="card-title text-center">Room Code: {{ room }}</h3>
+  <h3 id="status-text" class="card-title text-center"></h3>
   <embed src="{{ url_for('static', filename='sound/music.mp3') }}" autostart="true" loop="true" width="2" height="0">
   </embed>
 
-  <div id="lobby" class="hidden">
-    <table class="table text-white">
-      <thead>
-        <th scope="col">Players</th>
-      </thead>
-      <tbody id="players">
+  <div id="game" class="hidden">
+    <div id="lobby" class="hidden">
+      <p>Room Code: {{ room }}</p>
+      <p id="win-text" class="hidden"></p>
+      <table class="table text-white">
+        <thead>
+          <th scope="col">Players</th>
+        </thead>
+        <tbody id="players">
 
-      </tbody>
-    </table>
-  </div>
-
-  <div id="setup" class="hidden">
-    <p id="role-name"></p>
-    <p id="role-description"></p>
-  </div>
-
-  <div id="results" class="hidden">
-    <p id="results-text"></p>
-  </div>
-
-  <div id="round" class="hidden">
-    <div id="round-radio" class="hidden">
-      <label class="radio-container">One
-        <input type="radio" checked="checked" name="radio">
-        <span class="checkmark"></span>
-      </label>
-      <label class="radio-container">Two
-        <input type="radio" name="radio">
-        <span class="checkmark"></span>
-      </label>
-      <label class="radio-container">Three
-        <input type="radio" name="radio">
-        <span class="checkmark"></span>
-      </label>
-      <label class="radio-container">Four
-        <input type="radio" name="radio">
-        <span class="checkmark"></span>
-      </label>
+        </tbody>
+      </table>
     </div>
-  </div>
 
-  <button id="ready-button" class="btn button btn-lg" onclick="ready();">Ready!</button>
-  <p id="ready-status"></p>
+    <div id="setup" class="hidden">
+      <p id="role-name"></p>
+      <p id="role-description"></p>
+    </div>
+
+    <div id="results" class="hidden">
+      <p id="results-text">Testing</p>
+    </div>
+
+    <div id="round" class="hidden">
+      <div id="round-radio" class="hidden">
+        <label class="radio-container">One
+          <input type="radio" checked="checked" name="radio">
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio-container">Two
+          <input type="radio" name="radio">
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio-container">Three
+          <input type="radio" name="radio">
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio-container">Four
+          <input type="radio" name="radio">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+
+    <button id="ready-button" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <p id="ready-status"></p>
+  </div>
 
 </header>
 

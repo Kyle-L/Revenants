@@ -11,7 +11,9 @@ class Players(db.Model):
     ready = db.Column(db.Boolean, unique=False, nullable=False, default=False)
     role = db.Column(db.String(12), unique=False, nullable=False, default='villager')
     alive = db.Column(db.Boolean, unique=False, nullable=False, default=True)
-    chosen_player = db.Column(db.String(12), unique=False, nullable=True)
+    marked = db.Column(db.Boolean, unique=False, nullable=False, default=False)
+    chosen = db.Column(db.String(24), unique=False, nullable=True)
+
 
 class Characters(db.Model):
     username = db.Column(db.String(24), primary_key=True)
@@ -21,6 +23,3 @@ class Characters(db.Model):
     last_name = db.Column(db.String(24), unique=False, nullable=False)
     pronouns = db.Column(db.String(24), unique=False, nullable=False)
     profession = db.Column(db.String(24), unique=False, nullable=False)
-    background = db.Column(db.String(10000), unique=False, nullable=False)
-    personality = db.Column(db.String(10000), unique=False, nullable=False)
-    background = db.Column(db.String(10000), unique=False, nullable=False)
