@@ -121,16 +121,16 @@ def update_room_state(room: str, state: str):
 
 
 def assign_roles(room: str):
-    werewolf_num = 1
+    antag_num = 1
     prophet_num = 1
 
     players = get_players(room)
     indices = list(range(len(players)))
     shuffle(indices)
 
-    while werewolf_num > 0:
+    while antag_num > 0:
         players[indices.pop()].role = 'antagonist'
-        werewolf_num -= 1
+        antag_num -= 1
 
     while prophet_num > 0:
         players[indices.pop()].role = 'prophet'

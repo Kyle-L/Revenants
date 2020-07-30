@@ -52,7 +52,8 @@ socket.on("start_round", function (data) {
         if (index < 1) return;
         list += '<label class="radio-container">' + element +'<input type="radio" name="radio" value="' + element + '"><span class="checkmark"></span></label>';
     });
-    $("#" + data["state_html"]).html(list);
+    $("#round-radio").html(list);
+    $("#round-text").html(data["role_action"])
 
     // Start the timer.
     count = data["time"];

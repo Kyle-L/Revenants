@@ -48,8 +48,11 @@ def generate_retired_state(age):
 
 
 def get_role_name(role: str) -> str:
-    return game_info_json['roles'][role]['name']
+    return game_info_json['roles'][role.lower()]['name']
 
 
 def get_role_description(role: str) -> str:
-    return game_info_json['roles'][role]['description']
+    return game_info_json['roles'][role.lower()]['description']
+
+def get_role_action(role: str, is_day: bool) -> str:
+    return game_info_json['roles'][role.lower()]['action']['day' if is_day else 'night']

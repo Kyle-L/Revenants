@@ -1,4 +1,4 @@
-import os
+import os, operator
 from flask import Blueprint, redirect, render_template, url_for, request, session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from . import socketio
@@ -114,11 +114,11 @@ def ready(data):
         if state == 'lobby':
             start_setup(room)
         elif state == 'setup':
-            start_round(room, 'Night')
+            start_round(room, 'Night', False)
         elif state == 'night':
             process_choices_night(room)
         elif state == 'night-results':
-            start_round(room, 'Day')
+            start_round(room, 'Day', True)
         elif state == 'day':
             process_choices_day(room)
         elif state == 'day-results':
@@ -144,7 +144,7 @@ def start_setup(room):
         emit('start_setup', payload, room=player.id)
 
 
-def start_round(room, round_name):
+def start_round(room, round_name, is_day):
     print(f'[{room}] Starting {round_name.lower()}.')
 
     update_room_state(room, round_name.lower())
@@ -156,6 +156,7 @@ def start_round(room, round_name):
             'message': f'{round_name} starting in...',
             'state_html': 'round',
             'state_name': round_name,
+            'role_action': get_role_action(player.role, is_day),
             'players': get_players_string(room),
             'alive': player.alive
             
@@ -185,17 +186,42 @@ def process_choices_night(room):
             update_player_alive(player.code, player.username, False)
             result_str_general.append(f'{player.username} died.')
     
+    process_win_conditions(room, players, 'night-results', 'Night', result_str_general, result_str_private)
+
+
+def process_choices_day(room: str):
+    print(f'[{room}] Showing day results.')
+
+    result_str_general = []
+    result_str_private = []
+
+    player_dict = {}
+
+    players = get_players(room)
+    for player in players:
+        if player.chosen in player_dict:
+            player_dict[player.chosen] += 1
+        else:
+            player_dict[player.chosen] = 1
+    
+    player_killed = max(player_dict.items(), key=operator.itemgetter(1))[0]
+    update_player_alive(room, player_killed, False)
+    result_str_general.append(f'{player_killed} was killed.')
+
+    process_win_conditions(room, players, 'day-results', 'Day', result_str_general, result_str_private)
+
+def process_win_conditions(room, players, state, state_name, message_public, message_private):
     count_antag, count_rest = get_role_count(room)
     if count_antag >= count_rest:
         update_room_state(room, 'lobby')
         reset_game(room)
         payload = {
             'time': 5,
-            'message': 'Night results showing in...',
+            'message': f'{state_name} results showing in...',
             'state_html': 'lobby',
-            'state_name': 'Night Results',
+            'state_name': f'{state_name} Results',
             'win': True,
-            'win_message': 'Revenents won the game.'
+            'win_message': 'Revenants won the game.'
         }
 
         emit('results', payload, room=room)
@@ -204,49 +230,30 @@ def process_choices_night(room):
         reset_game(room)
         payload = {
             'time': 5,
-            'message': 'Night results showing in...',
+            'message': f'{state_name} results showing in...',
             'state_html': 'lobby',
-            'state_name': 'Night Results',
+            'state_name': f'{state_name} Results',
             'win': True,
             'win_message': 'Villagers won the game.'
         }
 
         emit('results', payload, room=room)
     else:
-        update_room_state(room, 'night-results')
+        update_room_state(room, state)
 
         for player in players:
-            if player.role == 'prophet':
-                result_str_private.append(f'{player.chosen} is a {get_player_from_name(player.chosen, room).role}.')
 
             payload = {
                 'time': 5,
-                'message': 'Night results showing in...',
+                'message': f'{state_name} results showing in...',
                 'state_html': 'results',
-                'state_name': 'Night Results',
-                'results': result_str_general,
-                'results_private': result_str_private,
+                'state_name': f'{state_name} Results',
+                'results': message_public,
+                'results_private': message_private,
                 'alive': player.alive
             }
 
             emit('results', payload, room=player.id)
-
-def process_choices_day(room: str):
-    print(f'[{room}] Showing day results.')
-
-    update_room_state(room, 'day-results')
-
-    players = get_players(room)
-    for player in players:
-        payload = {
-            'time': 5,
-            'message': 'Day results showing in...',
-            'state_html': 'results',
-            'state_name': 'Day Results',
-            'results': 'TODO: ADD FOR EACH PERSON - Day',
-            'alive': player.alive
-        }
-    emit('results', payload, room=room)
 
 def reset_game(room: str):
     reset_players(room)
