@@ -122,7 +122,7 @@ def ready(data):
         elif state == 'day':
             process_choices_day(room)
         elif state == 'day-results':
-            start_round(room, 'Night')
+            start_round(room, 'Night', False)
 
 
 def start_setup(room):
@@ -157,7 +157,7 @@ def start_round(room, round_name, is_day):
             'state_html': 'round',
             'state_name': round_name,
             'role_action': get_role_action(player.role, is_day),
-            'players': get_players_string(room),
+            'players': get_players_string(room, player.id),
             'alive': player.alive
             
         }
@@ -167,33 +167,48 @@ def start_round(room, round_name, is_day):
 def process_choices_night(room):
     print(f'[{room}] Showing night results.')
 
-    result_str_general = []
-    result_str_private = []
+    result_general_list = []
+    result_private_dict = {}
+
+    player_dict = {}
 
     players = get_players(room)
     for player in players:
         if player.role == 'antagonist':
             update_player_marked(room, player.chosen, True)
-            result_str_general.append(f'{player.chosen} was attacked.')
+            result_general_list.append(f'{player.chosen} was attacked.')
+        elif player.role == 'regular':
+            if player.chosen in player_dict:
+                player_dict[player.chosen] += 1
+            else:
+                player_dict[player.chosen] = 1
+        elif player.role == 'seer':
+            result_private_dict[player.id] = [f'{player.chosen} is a {get_player_from_name(room, player.chosen).role}.']
+            
+
+    player_protected = max(player_dict.items(), key=operator.itemgetter(1))[0]
+    if player_dict[player_protected] > 1:
+        update_player_marked(room, player_protected, False)
+        result_general_list.append(f'{player_protected} was protected.')
 
     for player in players:
         if player.role == 'doctor':
             update_player_marked(room, player.chosen, False)
-            result_str_general.append(f'{player.chosen} was healed.')
+            result_general_list.append(f'{player.chosen} was healed.')
 
     for player in players:
         if (player.marked):
             update_player_alive(player.code, player.username, False)
-            result_str_general.append(f'{player.username} died.')
+            result_general_list.append(f'{player.username} died.')
     
-    process_win_conditions(room, players, 'night-results', 'Night', result_str_general, result_str_private)
+    process_win_conditions(room, players, 'night-results', 'Night', result_general_list, result_private_dict)
 
 
 def process_choices_day(room: str):
     print(f'[{room}] Showing day results.')
 
-    result_str_general = []
-    result_str_private = []
+    result_general_list = []
+    result_private_dict = {}
 
     player_dict = {}
 
@@ -206,11 +221,11 @@ def process_choices_day(room: str):
     
     player_killed = max(player_dict.items(), key=operator.itemgetter(1))[0]
     update_player_alive(room, player_killed, False)
-    result_str_general.append(f'{player_killed} was killed.')
+    result_general_list.append(f'{player_killed} was killed.')
 
-    process_win_conditions(room, players, 'day-results', 'Day', result_str_general, result_str_private)
+    process_win_conditions(room, players, 'day-results', 'Day', result_general_list, result_private_dict)
 
-def process_win_conditions(room, players, state, state_name, message_public, message_private):
+def process_win_conditions(room, players, state, state_name, result_general_list, result_private_dict):
     count_antag, count_rest = get_role_count(room)
     if count_antag >= count_rest:
         update_room_state(room, 'lobby')
@@ -248,8 +263,8 @@ def process_win_conditions(room, players, state, state_name, message_public, mes
                 'message': f'{state_name} results showing in...',
                 'state_html': 'results',
                 'state_name': f'{state_name} Results',
-                'results': message_public,
-                'results_private': message_private,
+                'results_general': result_general_list,
+                'results_private': result_private_dict[player.id] if player.id in result_private_dict else '',
                 'alive': player.alive
             }
 

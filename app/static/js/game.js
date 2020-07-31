@@ -79,12 +79,14 @@ socket.on("results", function (data) {
         $("#" + element).fadeOut();
     })
 
-    $("#results-text").html(data['results'])
-    if (data['win']) {
-        $("#win-text").show();
-        $("#win-text").html(data['win_message']);
 
-    }
+    data['results_general'].forEach(element => {
+        $("#results-text-general").append("<li>" + element + "</li>")
+    })
+
+    data['results_private'].forEach(element => {
+        $("#results-text-private").append("<li>" + element + "</li>")
+    })
 
     // Start the timer.
     count = data["time"];

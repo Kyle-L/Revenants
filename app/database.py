@@ -89,11 +89,11 @@ def get_players_string_lobby(room: str) -> list:
         li.append(f'{player.username} {ready}')
     return li
 
-def get_players_string(room: str) -> list:
+def get_players_string(room: str, skip_id: str="") -> list:
     li = []
     instance = Players.query.filter(Players.code == room).all()
     for player in instance:
-        if player.alive: 
+        if player.alive and not player.id == skip_id:
             li.append(f'{player.username}')
     return li
 
