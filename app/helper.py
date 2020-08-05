@@ -56,3 +56,6 @@ def get_role_description(role: str) -> str:
 
 def get_role_action(role: str, is_day: bool) -> str:
     return game_info_json['roles'][role.lower()]['action']['day' if is_day else 'night']
+
+def get_win_message(is_good: bool) -> str:
+    return game_info_json['win_messages']['good' if is_good else 'bad']

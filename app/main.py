@@ -1,9 +1,12 @@
-import os, operator
+import os
+import operator
 from flask import Blueprint, redirect, render_template, url_for, request, session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from . import socketio
 from .helper import *
 from .database import *
+
+MIN_PLAYER_COUNT = 4
 
 app = Blueprint('main', __name__)
 
@@ -35,7 +38,7 @@ def index():
 
             session['name'] = name
             session['room'] = room
-            
+
         return redirect(url_for('.game'))
     return render_template('index.html')
 
@@ -46,7 +49,7 @@ def game():
     room = session.get('room', '')
     if name == '' or room == '':
         return redirect(url_for('.index'))
-    
+
     # If there is already a player with that name, redirect to index.
     state = get_room_state(room)
     if get_player_from_name(name, room) or (state != 'n/a' and state != 'lobby'):
@@ -69,7 +72,8 @@ def joined(data):
 
     print(f'[{room}] {name} joined.')
 
-    emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
+    emit('update_players', {
+         'players': get_players_string_lobby(room)}, room=room)
 
 
 @socketio.on('disconnect')
@@ -88,7 +92,11 @@ def left():
 
     print(f'[{room}] {name} left.')
 
-    emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
+    emit('update_players', {
+         'players': get_players_string_lobby(room)}, room=room)
+
+    if len(get_players(room)) < MIN_PLAYER_COUNT and get_room_state(room) != 'lobby':
+        return_to_lobby(room)
 
 
 @socketio.on('ready')
@@ -99,16 +107,18 @@ def ready(data):
     player_ready(request.sid)
     state = get_room_state(room)
     if state == 'lobby':
-        emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
+        emit('update_players', {
+             'players': get_players_string_lobby(room)}, room=room)
     elif state == 'day' or state == 'night':
         if data['chosen_player']:
             update_player_chosen(request.sid, data['chosen_player'])
-        emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
+        emit('update_ready', {'players': get_ready_count_string(
+            room) + ' are ready.'}, room=room)
     else:
-        emit('update_done', {'players': get_ready_count_string(room) + ' are ready.'}, room=room)
+        emit('update_ready', {'players': get_ready_count_string(
+            room) + ' are ready.'}, room=room)
 
-
-    if is_room_ready(room):
+    if is_room_ready(room) and len(get_players(room)) >= MIN_PLAYER_COUNT:
         unready_all_players(room)
 
         if state == 'lobby':
@@ -123,6 +133,21 @@ def ready(data):
             process_choices_day(room)
         elif state == 'day-results':
             start_round(room, 'Night', False)
+
+
+def return_to_lobby(room):
+    print(f'[{room}] Returning to lobby.')
+
+    reset_game(room)
+    update_room_state(room, 'lobby')
+    payload = {
+        'time': 5,
+        'message': 'Returning to lobby in...',
+        'state_html': 'lobby',
+        'state_name': '',
+        'alive': True
+    }
+    emit('start_lobby', payload, room=room)
 
 
 def start_setup(room):
@@ -159,7 +184,7 @@ def start_round(room, round_name, is_day):
             'role_action': get_role_action(player.role, is_day),
             'players': get_players_string(room, player.id),
             'alive': player.alive
-            
+
         }
         emit('start_round', payload, room=player.id)
 
@@ -182,9 +207,9 @@ def process_choices_night(room):
                 player_dict[player.chosen] += 1
             else:
                 player_dict[player.chosen] = 1
-        elif player.role == 'seer':
-            result_private_dict[player.id] = [f'{player.chosen} is a {get_player_from_name(room, player.chosen).role}.']
-            
+        elif player.role == 'prophet':
+            result_private_dict[player.id] = [
+                f'{player.chosen} is a {get_role_name(get_player_from_name(player.chosen, room).role)}.']
 
     player_protected = max(player_dict.items(), key=operator.itemgetter(1))[0]
     if player_dict[player_protected] > 1:
@@ -199,9 +224,11 @@ def process_choices_night(room):
     for player in players:
         if (player.marked):
             update_player_alive(player.code, player.username, False)
-            result_general_list.append(f'{player.username} died.')
-    
-    process_win_conditions(room, players, 'night-results', 'Night', result_general_list, result_private_dict)
+            result_general_list.append(
+                f'{player.username} died from their injuries.')
+
+    process_win_conditions(room, players, 'night-results',
+                           'Night', result_general_list, result_private_dict)
 
 
 def process_choices_day(room: str):
@@ -218,12 +245,14 @@ def process_choices_day(room: str):
             player_dict[player.chosen] += 1
         else:
             player_dict[player.chosen] = 1
-    
+
     player_killed = max(player_dict.items(), key=operator.itemgetter(1))[0]
     update_player_alive(room, player_killed, False)
-    result_general_list.append(f'{player_killed} was killed.')
+    result_general_list = [f'{player_killed} was killed.']
 
-    process_win_conditions(room, players, 'day-results', 'Day', result_general_list, result_private_dict)
+    process_win_conditions(room, players, 'day-results',
+                           'Day', result_general_list, result_private_dict)
+
 
 def process_win_conditions(room, players, state, state_name, result_general_list, result_private_dict):
     count_antag, count_rest = get_role_count(room)
@@ -234,12 +263,11 @@ def process_win_conditions(room, players, state, state_name, result_general_list
             'time': 5,
             'message': f'{state_name} results showing in...',
             'state_html': 'lobby',
-            'state_name': f'{state_name} Results',
-            'win': True,
-            'win_message': 'Revenants won the game.'
+            'state_name': f'{get_win_message(True)}',
+            'win': True
         }
 
-        emit('results', payload, room=room)
+        emit('start_results', payload, room=room)
     elif count_antag == 0:
         update_room_state(room, 'lobby')
         reset_game(room)
@@ -247,29 +275,29 @@ def process_win_conditions(room, players, state, state_name, result_general_list
             'time': 5,
             'message': f'{state_name} results showing in...',
             'state_html': 'lobby',
-            'state_name': f'{state_name} Results',
-            'win': True,
-            'win_message': 'Villagers won the game.'
+            'state_name': f'{get_win_message(False)}',
+            'win': True
         }
 
-        emit('results', payload, room=room)
+        emit('start_results', payload, room=room)
     else:
         update_room_state(room, state)
 
         for player in players:
-
             payload = {
                 'time': 5,
                 'message': f'{state_name} results showing in...',
                 'state_html': 'results',
                 'state_name': f'{state_name} Results',
                 'results_general': result_general_list,
-                'results_private': result_private_dict[player.id] if player.id in result_private_dict else '',
+                'results_private': result_private_dict[player.id] if player.id in result_private_dict else [],
                 'alive': player.alive
             }
 
-            emit('results', payload, room=player.id)
+            emit('start_results', payload, room=player.id)
+
 
 def reset_game(room: str):
     reset_players(room)
-    emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
+    emit('update_players', {
+         'players': get_players_string_lobby(room)}, room=room)

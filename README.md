@@ -1,4 +1,4 @@
-## Flask Template
+## Revenants
 
 - [Overview](#overview)
 - [Media](#media)
@@ -8,7 +8,8 @@
 
 <a name="overview"/></a>
 ## Overview
-This repository serves as a template for a basic web application built using [Flask](https://flask.palletsprojects.com/en/1.1.x/) in Python.
+This repository is for the development of a web application game similiar to that of the classic card game Mafia. 
+Tech Stack: Python3, Flask, Socketio, and PostgresSQL.
 
 <a name="media"/></a>
 ## Media
@@ -25,12 +26,12 @@ This repository serves as a template for a basic web application built using [Fl
 ## Local Setup
 1. Clone the repository.
 ```
-$ git clone git@github.com:Kyle-L/Flask-Template.git
+$ git clone git@github.com:Kyle-L/Revenants.git
 ```
 
 2. Check into the cloned repository.
 ```
-cd Flask-Template/project
+cd Revenants/app
 ```
 
 3. Install Pipenv using pip, install pip if you haven't already.
@@ -53,24 +54,23 @@ $ source env/bin/activate
 $ pip3 install -r requirements.txt
 ```
 
-7. Set environment variables.
-```
-$ export FLASK_APP=app
-$ export FLASK_DEBUG=1
-```
-
-8. Setup Postgres database using Flask-SQLAlchemy.
-```
-$ python3
->> from app import db, create_app
->> db.create_all(app=create_app())
->> exit()
-```
-
 9. Run the server.
 ```
-$ flask run
+$ gunicorn --worker-class eventlet -w 1 run:app
 ```
+
+## Heroku Deployment
+1. Fork this repository.
+
+2. Create a new Heroku project
+
+3. Create a new PostgresSQL database resource for the forked repository.
+
+4. Under the deployment tab, login into Github and choose the forked repository to deploy from.
+
+5. Deploy!
+
+
 
 <a name="license"></a>
 ## License

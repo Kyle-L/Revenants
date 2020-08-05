@@ -1,25 +1,40 @@
-var states = ["lobby", "setup", "results", "round", "end"]
+var states = ["lobby", "setup", "results", "round"]
 var interval
 var count = 0
 var socket = io.connect();
 
+/**
+ * When the document has fully loaded.
+ */
 $(document).ready(function () {
+    // Fades in the lobby and hides all other states.
     $("#game").fadeIn();
     $("#ready-status").hide();
     states.forEach(element => {
         $("#" + element).hide();
     })
-    $("#lobby").show();
+    $("#lobby").fadeIn();
 });
 
+/**
+ * When the client recognizes it has connected to socketio.
+ */
 socket.on("connect", function () {
+    // Joins the player to a room on connect.
     socket.emit("join", {});
 });
 
+/**
+ * When the client recognizes it has disconnected from socketio.
+ */
 socket.on("disconnect", function () {
+    // Leaves a room when the player disconnects.
     socket.emit("leave", {});
 });
 
+/**
+ * When the player's list has been updated by the server. 
+ */
 socket.on("update_players", function (data) {
     var list = document.getElementById("players");
     list.innerHTML = "";
@@ -32,66 +47,83 @@ socket.on("update_players", function (data) {
     });
 })
 
-socket.on("update_done", function (data) {
+/**
+ * When the server indicates a player has readied up.
+ */
+socket.on("update_ready", function (data) {
+    // Fades in and updates the ready-status text to show 
+    // how many players are ready.
     $("#ready-status").fadeIn();
     $("#ready-status").html(data["players"])
-})
+});
 
-socket.on("start_round", function (data) {
-    // Found out last state.
-    $("#ready-button").fadeOut();
-    $("#ready-status").fadeOut();
-    states.forEach(element => {
-        $("#" + element).fadeOut();
-    })
-
-    // Add round radio boxes.
-    var list = ''
-    list += '<label class="radio-container">' + data["players"][0] +'<input type="radio" name="radio" checked="checked" value="' + data["players"][0] + '"><span class="checkmark"></span></label>';
-    data["players"].forEach((element, index) => {
-        if (index < 1) return;
-        list += '<label class="radio-container">' + element +'<input type="radio" name="radio" value="' + element + '"><span class="checkmark"></span></label>';
-    });
-    $("#round-radio").html(list);
-    $("#round-text").html(data["role_action"])
-
-    // Start the timer.
+socket.on("start_lobby", function (data) {
+    fadeOutState();
     count = data["time"];
     interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"]);
 });
 
 socket.on("start_setup", function (data) {
     $("#ready-button").fadeOut();
-    $("#lobby").fadeOut();
 
     $("#role-name").html("You are a " + data['role'] + "!");
     $("#role-description").html(data['role_description']);
 
+    fadeOutState();
     count = data["time"];
     interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"]);
 });
 
-socket.on("results", function (data) {
-    // Found out last state.
+socket.on("start_round", function (data) {
+    // Add round radio boxes.
+    $("#round-radio").fadeIn();
+
+    if (data["alive"]) {
+        var list = "";
+        list += '<label class="radio-container">' + data["players"][0] + '<input type="radio" name="radio" checked="checked" value="' + data["players"][0] + '"><span class="checkmark"></span></label>';
+        data["players"].forEach((element, index) => {
+            if (index < 1) return;
+            list += '<label class="radio-container">' + element + '<input type="radio" name="radio" value="' + element + '"><span class="checkmark"></span></label>';
+        });
+        $("#round-radio").html(list);
+        $("#round-text").html(data["role_action"]);
+    } else {
+        $("#round-text").html("Sorry, ghost unfortunately can't affect the living. :(");
+        $("#round-radio").html("");
+    }
+
+    // Start the timer.
+    fadeOutState();
+    count = data["time"];
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"]);
+});
+
+socket.on("start_results", function (data) {
+    // Display the result bullet points if any results exist.
+    if (data['results_general'] != null) {
+        data['results_general'].forEach(element => {
+            $("#results-text-general").append("<li>" + element + "</li>")
+        })
+    }
+    if (data['results_private'] != null) {
+        data['results_private'].forEach(element => {
+            $("#results-text-private").append("<li>" + element + "</li>")
+        })
+    }
+
+    // Start the timer to change states.
+    fadeOutState();
+    count = data["time"];
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"] || data["win"]);
+});
+
+function fadeOutState() {
     $("#ready-button").fadeOut();
     $("#ready-status").fadeOut();
     states.forEach(element => {
         $("#" + element).fadeOut();
-    })
-
-
-    data['results_general'].forEach(element => {
-        $("#results-text-general").append("<li>" + element + "</li>")
-    })
-
-    data['results_private'].forEach(element => {
-        $("#results-text-private").append("<li>" + element + "</li>")
-    })
-
-    // Start the timer.
-    count = data["time"];
-    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"] || data['win']);
-});
+    });
+}
 
 function setState(state, stateStatus, alive) {
     $("#status-text").html(stateStatus);
@@ -109,12 +141,14 @@ function setState(state, stateStatus, alive) {
 
 function ready() {
     if ($("#ready-button").html() == "I am ready!") {
-        $("#ready-button").html("I am not ready!")
+        $("#ready-button").html("I am not ready!");
+        $("#round-radio").fadeOut();
     } else {
         $("#ready-button").html("I am ready!")
+        $("#round-radio").fadeIn();
     }
 
-    socket.emit("ready", {"chosen_player": $('input[name="radio"]:checked').val()});
+    socket.emit("ready", { "chosen_player": $('input[name="radio"]:checked').val() });
 }
 
 function timer(message, state, stateName, alive) {

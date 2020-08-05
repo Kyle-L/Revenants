@@ -12,7 +12,6 @@
   <div id="game" class="hidden">
     <div id="lobby" class="hidden">
       <p>Room Code: {{ room }}</p>
-      <p id="win-text" class="hidden"></p>
       <table class="table text-white">
         <thead>
           <th scope="col">Players</th>
@@ -21,6 +20,7 @@
 
         </tbody>
       </table>
+      <p class="text-light">A new game will start once 4 players are joined and everyone is ready!</p>
     </div>
 
     <div id="setup" class="hidden">
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <button id="ready-button" class="btn button btn-lg" onclick="ready();">Ready!</button>
+    <button id="ready-button" class="btn button btn-lg" onclick="ready();">I am ready!</button>
     <p id="ready-status"></p>
   </div>
 
