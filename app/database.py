@@ -94,12 +94,11 @@ def get_players_string_lobby(room: str) -> list:
     return li
 
 
-def get_players_string_win(room: str, skip_id: str="") -> list:
+def get_players_string_win(room: str) -> list:
     li = []
     for player in get_players(room):
-        if player.is_alive and not player.id == skip_id:
-            survival_status = 'survived' if player.is_alive else 'is dead'
-            li.append(f'{player.character_name} ({player.username}) was a {get_role_name(player.role)} and {survival_status}.')
+        survival_status = 'survived' if player.is_alive else 'is dead'
+        li.append(f'{player.character_name} ({player.username}) was a {get_role_name(player.role)} and {survival_status}.')
     return li
 
 

@@ -104,7 +104,7 @@ socket.on("start_results", function (data) {
     $("#results-text-private").html();
     
     // Display the result bullet points if any results exist.
-    if (data['results_general'] != null && data['results_general'].count > 0) {
+    if (data['results_general'] != null && data['results_general'].length > 0) {
         $("#results-header-general").show();
         $("#results-text-general").show();
         data['results_general'].forEach(element => {
@@ -115,7 +115,7 @@ socket.on("start_results", function (data) {
         $("#results-text-general").hide();
     }
 
-    if (data['results_private'] != null && data['results_private'].count > 0) {
+    if (data['results_private'] != null && data['results_private'].length > 0) {
         $("#results-header-private").show();
         $("#results-text-private").show();
         data['results_private'].forEach(element => {
