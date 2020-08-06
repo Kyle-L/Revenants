@@ -1,4 +1,4 @@
-var states = ["lobby", "setup", "results", "round"]
+var states = ["lobby", "setup", "results", "round", "win"]
 var interval
 var count = 0
 var socket = io.connect();
@@ -66,7 +66,7 @@ socket.on("start_lobby", function (data) {
 socket.on("start_setup", function (data) {
     $("#ready-button").fadeOut();
 
-    $("#role-name").html("You are a " + data['role'] + "!");
+    $("#role-name").html("You are " + data['name'] + "! A " + data['age'] + " year old " + data['role'] + "!");
     $("#role-description").html(data['role_description']);
 
     fadeOutState();
@@ -80,10 +80,10 @@ socket.on("start_round", function (data) {
 
     if (data["alive"]) {
         var list = "";
-        list += '<label class="radio-container">' + data["players"][0] + '<input type="radio" name="radio" checked="checked" value="' + data["players"][0] + '"><span class="checkmark"></span></label>';
-        data["players"].forEach((element, index) => {
+        list += '<label class="radio-container">' + data["players_names"][0] + '<input type="radio" name="radio" checked="checked" value="' + data["players_ids"][0] + '"><span class="checkmark"></span></label>';
+        data["players_names"].forEach((element, index) => {
             if (index < 1) return;
-            list += '<label class="radio-container">' + element + '<input type="radio" name="radio" value="' + element + '"><span class="checkmark"></span></label>';
+            list += '<label class="radio-container">' + element + '<input type="radio" name="radio" value="' + data["players_ids"][index] + '"><span class="checkmark"></span></label>';
         });
         $("#round-radio").html(list);
         $("#round-text").html(data["role_action"]);
@@ -99,22 +99,53 @@ socket.on("start_round", function (data) {
 });
 
 socket.on("start_results", function (data) {
+    // Empties the result lists.
+    $("#results-text-general").html();
+    $("#results-text-private").html();
+    
     // Display the result bullet points if any results exist.
-    if (data['results_general'] != null) {
+    if (data['results_general'] != null && data['results_general'].count > 0) {
+        $("#results-header-general").show();
+        $("#results-text-general").show();
         data['results_general'].forEach(element => {
             $("#results-text-general").append("<li>" + element + "</li>")
         })
+    } else {
+        $("#results-header-general").hide();
+        $("#results-text-general").hide();
     }
-    if (data['results_private'] != null) {
+
+    if (data['results_private'] != null && data['results_private'].count > 0) {
+        $("#results-header-private").show();
+        $("#results-text-private").show();
         data['results_private'].forEach(element => {
             $("#results-text-private").append("<li>" + element + "</li>")
         })
+    } else {
+        $("#results-header-private").hide();
+        $("#results-text-private").hide();
     }
 
     // Start the timer to change states.
     fadeOutState();
     count = data["time"];
-    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"] || data["win"]);
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], data["alive"]);
+});
+
+socket.on("start_win", function (data) {
+    // Update the win message.
+    $("#win-description").html(data["win_message"]);
+
+    // Show the player list with roles and survival status.
+    $("#win-list").html();
+    data['players'].forEach(element => {
+        $("#win-list").append("<li>" + element + "</li>")
+    })
+
+    // Start the timer to change states.
+    fadeOutState();
+    count = data["time"];
+    interval = setInterval(timer, 100, data["message"], data["state_html"], data["state_name"], true);
 });
 
 function fadeOutState() {

@@ -51,7 +51,7 @@ def is_room_ready(room: str) -> bool:
     ready = True
     players = Players.query.filter(Players.code == room)
     for player in players:
-        if player.alive:
+        if player.is_alive:
             ready = player.ready and ready
     return ready
 
@@ -59,50 +59,77 @@ def is_room_ready(room: str) -> bool:
 def get_player(sid: str):
     return Players.query.filter(Players.id == sid).first()
 
+
 def get_player_from_name(name: str, room: str):
     return Players.query.filter(Players.username == name, Players.code==room).first()
+
 
 def get_players(room: str):
     return Players.query.filter(Players.code == room).all()
 
 
-def update_player_chosen(sid: str, chosen:str):
-    get_player(sid).chosen = chosen
+def update_player_chosen_player(sid: str, chosen_player:str):
+    get_player(sid).chosen_player = chosen_player
 
     ses.commit()
 
-def update_player_alive(room: str, name:str, is_alive: bool):
-    get_player_from_name(name, room).alive = is_alive
+
+def update_player_alive(sid: str, is_alive: bool):
+    get_player(sid).is_alive = is_alive
 
     ses.commit()
 
-def update_player_marked(room: str, name:str, is_marked: bool):
-    get_player_from_name(name, room).marked = is_marked
+
+def update_player_marked(sid: str, is_is_marked: bool):
+    get_player(sid).is_marked = is_is_marked
 
     ses.commit()
+
 
 def get_players_string_lobby(room: str) -> list:
     li = []
-    instance = Players.query.filter(Players.code == room).all()
-    for player in instance:
+    for player in get_players(room):
         ready = '(READY)'if player.ready == True else '(NOT READY)'
         li.append(f'{player.username} {ready}')
     return li
 
+
+def get_players_string_win(room: str, skip_id: str="") -> list:
+    li = []
+    for player in get_players(room):
+        if player.is_alive and not player.id == skip_id:
+            survival_status = 'survived' if player.is_alive else 'is dead'
+            li.append(f'{player.character_name} ({player.username}) was a {get_role_name(player.role)} and {survival_status}.')
+    return li
+
+
 def get_players_string(room: str, skip_id: str="") -> list:
     li = []
-    instance = Players.query.filter(Players.code == room).all()
-    for player in instance:
-        if player.alive and not player.id == skip_id:
-            li.append(f'{player.username}')
+    for player in get_players(room):
+        if player.is_alive and not player.id == skip_id:
+            li.append(f'{player.character_name} ({player.username})')
     return li
+
+
+def get_player_string(sid: str) -> str:
+    player = get_player(sid)
+    return f'{player.character_name} ({player.username})'
+
+
+def get_players_ids(room: str, skip_id: str="") -> list:
+    li = []
+    for player in get_players(room):
+        if player.is_alive and not player.id == skip_id:
+            li.append(player.id)
+    return li
+
 
 def get_ready_count_string(room: str) -> str:
     player_count = 0
     ready_count = 0
     players = get_players(room)
     for player in players:
-        if player.alive:
+        if player.is_alive:
             player_count += 1
             if player.ready: 
                 ready_count += 1
@@ -117,6 +144,20 @@ def get_room_state(room: str):
 
 def update_room_state(room: str, state: str):
     Rooms.query.filter(Rooms.code == room).first().game_state = state.lower()
+    ses.commit()
+
+
+def assign_characters(room: str):
+    players = get_players(room)
+    for player in players:
+        gender = generate_gender()
+        first_name = generate_first_name(gender)
+        last_name = generate_last_name()
+        age = generate_age()
+
+        player.character_name = f'{first_name} {last_name}'
+        player.character_age = age
+
     ses.commit()
 
 
@@ -146,7 +187,7 @@ def get_role_count(room: str):
     count_rest = 0
     players = get_players(room)
     for player in players:
-        if player.alive:
+        if player.is_alive:
             if player.role == 'antagonist':
                 count_antag += 1
             else:
@@ -156,9 +197,9 @@ def get_role_count(room: str):
 def reset_players(room: str):
     players = get_players(room)
     for player in players:
-        player.alive = True
-        player.marked = False
-        player.chosen = ''
+        player.is_alive = True
+        player.is_marked = False
+        player.chosen_player = ''
         player.ready = False
     
     ses.commit()

@@ -5,7 +5,7 @@
             "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
             "action": {
                 "day": "Choose a villager that you suspect is a revenant.",
-                "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will surive the night."
+                "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
             }
         },
         "traitor": {
@@ -13,7 +13,7 @@
             "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
             "action": {
                 "day": "Choose a villager that you suspect is a revenant.",
-                "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will surive the night."
+                "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
             }
         },
         "healer": {

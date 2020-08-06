@@ -31,16 +31,12 @@ def generate_gender_pronouns(gender):
     return character_info_json['pronouns']['he' if gender == 1 else 'she']
 
 
-def generate_first_name() -> str:
+def generate_first_name(gender: bool) -> str:
     return random.choice(character_info_json['first_names']['men' if gender == 1 else 'women'])
 
 
 def generate_last_name() -> str:
     return random.choice(character_info_json['last_names'])
-
-
-def generate_occupation() -> str:
-    return random.choice(character_info_json['occupations'])
 
 
 def generate_retired_state(age):

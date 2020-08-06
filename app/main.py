@@ -60,6 +60,9 @@ def game():
 
 @socketio.on('join')
 def joined(data):
+    """ Called when a client connects.
+    """
+
     # Gets the player's name and room.
     name = session.get('name')
     room = session.get('room')
@@ -78,6 +81,9 @@ def joined(data):
 
 @socketio.on('disconnect')
 def left():
+    """ Called when a client disconnects.
+    """
+
     # Gets the player's name and room.
     name = session.get('name')
     room = session.get('room')
@@ -101,6 +107,10 @@ def left():
 
 @socketio.on('ready')
 def ready(data):
+    """ Called when a client clicks the ready button.
+    """
+
+    # Gets the player's name and room.
     name = session.get('name')
     room = session.get('room')
 
@@ -111,7 +121,7 @@ def ready(data):
              'players': get_players_string_lobby(room)}, room=room)
     elif state == 'day' or state == 'night':
         if data['chosen_player']:
-            update_player_chosen(request.sid, data['chosen_player'])
+            update_player_chosen_player(request.sid, data['chosen_player'])
         emit('update_ready', {'players': get_ready_count_string(
             room) + ' are ready.'}, room=room)
     else:
@@ -133,9 +143,14 @@ def ready(data):
             process_choices_day(room)
         elif state == 'day-results':
             start_round(room, 'Night', False)
+        elif state == 'win':
+            return_to_lobby(room)
 
 
 def return_to_lobby(room):
+    """ Returns the game to the lobby state.
+    """
+
     print(f'[{room}] Returning to lobby.')
 
     reset_game(room)
@@ -151,9 +166,13 @@ def return_to_lobby(room):
 
 
 def start_setup(room):
+    """ Starts the game's setup state.
+    """
+
     print(f'[{room}] Starting setup.')
 
     assign_roles(room)
+    assign_characters(room)
     update_room_state(room, 'setup')
     players = get_players(room)
     for player in players:
@@ -162,9 +181,11 @@ def start_setup(room):
             'message': 'Game starting in...',
             'state_html': 'setup',
             'state_name': 'Set Up',
+            'name': player.character_name,
+            'age': player.character_age,
             'role': get_role_name(player.role),
             'role_description': get_role_description(player.role),
-            'alive': player.alive
+            'alive': player.is_alive
         }
         emit('start_setup', payload, room=player.id)
 
@@ -182,104 +203,126 @@ def start_round(room, round_name, is_day):
             'state_html': 'round',
             'state_name': round_name,
             'role_action': get_role_action(player.role, is_day),
-            'players': get_players_string(room, player.id),
-            'alive': player.alive
+            'players_names': get_players_string(room, player.id),
+            'players_ids': get_players_ids(room, player.id),
+            'alive': player.is_alive
 
         }
         emit('start_round', payload, room=player.id)
 
 
 def process_choices_night(room):
+    """ Processes the choices that were made by players at night.
+    """
+
     print(f'[{room}] Showing night results.')
 
     result_general_list = []
     result_private_dict = {}
 
-    player_dict = {}
+    protect_dict = {}
 
     players = get_players(room)
+
+    # The first loop through the players' list will process actions that should happen 1st.
     for player in players:
         if player.role == 'antagonist':
-            update_player_marked(room, player.chosen, True)
-            result_general_list.append(f'{player.chosen} was attacked.')
+            # Marks the player to be killed.
+            update_player_marked(player.chosen_player, True)
+            # Updates the result list.
+            result_general_list.append(f'{get_player_string(player.chosen_player)} was attacked.')
+
         elif player.role == 'regular':
-            if player.chosen in player_dict:
-                player_dict[player.chosen] += 1
+            # Update the dictionary representing how many regulars are protecting someone.
+            if player.chosen_player in protect_dict:
+                protect_dict[player.chosen_player] += 1
             else:
-                player_dict[player.chosen] = 1
+                protect_dict[player.chosen_player] = 1
+
         elif player.role == 'prophet':
-            result_private_dict[player.id] = [
-                f'{player.chosen} is a {get_role_name(get_player_from_name(player.chosen, room).role)}.']
+            # Update the personal result dict for the player who is a prophet.
+            result_private_dict[player.id] = [f'{get_player_string(player.chosen_player)} is a {get_role_name(get_player(player.chosen_player).role)}.']
 
-    player_protected = max(player_dict.items(), key=operator.itemgetter(1))[0]
-    if player_dict[player_protected] > 1:
-        update_player_marked(room, player_protected, False)
-        result_general_list.append(f'{player_protected} was protected.')
+    # Unmark the protected player if they've been marked by the antagonist.
+    player_protected = max(protect_dict.items(), key=operator.itemgetter(1))[0]
+    if protect_dict[player_protected] > 1:
+        update_player_marked(player_protected, False)
+        result_general_list.append(f'{get_player_string(player_protected)} was protected.')
 
+    # The second loop through the players' list will process actions that should happen 2nd.
     for player in players:
         if player.role == 'doctor':
-            update_player_marked(room, player.chosen, False)
-            result_general_list.append(f'{player.chosen} was healed.')
+            update_player_marked(player.chosen_player, False)
+            result_general_list.append(f'{get_player_string(player.chosen_player)} was healed.')
 
+    # The final loop through the players' list will determine who survives the night.
     for player in players:
-        if (player.marked):
-            update_player_alive(player.code, player.username, False)
-            result_general_list.append(
-                f'{player.username} died from their injuries.')
+        if (player.is_marked):
+            update_player_alive(player.id, False)
+            result_general_list.append(f'{get_player_string(player.id)} died from their injuries.')
+            result_private_dict[player.id] = ['You have died from your injuries.']
 
-    process_win_conditions(room, players, 'night-results',
-                           'Night', result_general_list, result_private_dict)
+    # Determines if the game was won by a team or the next round should start.
+    process_win_conditions(room, players, 'night-results', 'Night', result_general_list, result_private_dict)
 
 
 def process_choices_day(room: str):
+    """ Processes the choices that were made by players during the day.
+    """
+
     print(f'[{room}] Showing day results.')
 
     result_general_list = []
     result_private_dict = {}
 
-    player_dict = {}
+    kill_dict = {}
 
     players = get_players(room)
+
+    # The loops through the players to determine how wants to kill who.
     for player in players:
-        if player.chosen in player_dict:
-            player_dict[player.chosen] += 1
+        if player.chosen_player in kill_dict:
+            kill_dict[player.chosen_player] += 1
         else:
-            player_dict[player.chosen] = 1
+            kill_dict[player.chosen_player] = 1
 
-    player_killed = max(player_dict.items(), key=operator.itemgetter(1))[0]
-    update_player_alive(room, player_killed, False)
-    result_general_list = [f'{player_killed} was killed.']
+    # Grab the player from the dict with the most votes and mark them as dead.
+    player_killed = max(kill_dict.items(), key=operator.itemgetter(1))[0]
+    update_player_alive(player_killed, False)
+    result_general_list = [f'{get_player_string(player_killed)} was killed.']
 
-    process_win_conditions(room, players, 'day-results',
-                           'Day', result_general_list, result_private_dict)
+    # Determines if the game was won by a team or the next round should start.
+    process_win_conditions(room, players, 'day-results', 'Day', result_general_list, result_private_dict)
 
 
 def process_win_conditions(room, players, state, state_name, result_general_list, result_private_dict):
     count_antag, count_rest = get_role_count(room)
     if count_antag >= count_rest:
-        update_room_state(room, 'lobby')
-        reset_game(room)
+        update_room_state(room, 'win')
         payload = {
             'time': 5,
             'message': f'{state_name} results showing in...',
-            'state_html': 'lobby',
-            'state_name': f'{get_win_message(True)}',
-            'win': True
+            'state_html': 'win',
+            'state_name': get_role_name('antagonist').capitalize() + 's Win!',
+            'win_message': f'{get_win_message(True)}',
+            'players': get_players_string_win(room)
         }
 
-        emit('start_results', payload, room=room)
+        emit('start_win', payload, room=room)
+        reset_game(room)
     elif count_antag == 0:
-        update_room_state(room, 'lobby')
-        reset_game(room)
+        update_room_state(room, 'win')
         payload = {
             'time': 5,
             'message': f'{state_name} results showing in...',
-            'state_html': 'lobby',
-            'state_name': f'{get_win_message(False)}',
-            'win': True
+            'state_html': 'win',
+            'state_name': get_role_name('regular').capitalize() + 's Win!',
+            'win_message': f'{get_win_message(False)}',
+            'players': get_players_string_win(room)
         }
 
-        emit('start_results', payload, room=room)
+        emit('start_win', payload, room=room)
+        reset_game(room)
     else:
         update_room_state(room, state)
 
@@ -291,7 +334,7 @@ def process_win_conditions(room, players, state, state_name, result_general_list
                 'state_name': f'{state_name} Results',
                 'results_general': result_general_list,
                 'results_private': result_private_dict[player.id] if player.id in result_private_dict else [],
-                'alive': player.alive
+                'alive': player.is_alive
             }
 
             emit('start_results', payload, room=player.id)

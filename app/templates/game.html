@@ -11,7 +11,7 @@
 
   <div id="game" class="hidden">
     <div id="lobby" class="hidden">
-      <p>Room Code: {{ room }}</p>
+      <p class="font-weight-bold">Room Code: {{ room }}</p>
       <table class="table text-white">
         <thead>
           <th scope="col">Players</th>
@@ -20,19 +20,20 @@
 
         </tbody>
       </table>
-      <p class="text-light">A new game will start once 4 players are joined and everyone is ready!</p>
+      <p class="font-weight-light text-light">A new game will start once 4 players are joined and everyone is ready!</p>
     </div>
 
     <div id="setup" class="hidden">
       <p id="role-name"></p>
       <p id="role-description"></p>
+      <p>Before continuing, it is encouraged that everyone in the village familarize themselves with their fellow villagers. Please take a minute to go around and introduce yourself and what your role is (Or lie about what your role is).</p>
     </div>
 
     <div id="results" class="hidden">
-      <p>Results General</p>
+      <p id="results-header-general">Village Update</p>
       <ul id="results-text-general"></ul>
 
-      <p>Results Private</p>
+      <p id="results-header-private" class="hidden">Personal Update</p>
       <ul id="results-text-private"></ul>
     </div>
 
@@ -56,6 +57,13 @@
           <span class="checkmark"></span>
         </label>
       </div>
+    </div>
+
+    <div id="win" class="hidden">
+      <p id="win-description"></p>
+      <p>Who was everyone?</p>
+      <ul id="win-list"></ul>
+      <p class="font-weight-light">When everyone is ready, the game will return to the lobby.</p>
     </div>
 
     <button id="ready-button" class="btn button btn-lg" onclick="ready();">I am ready!</button>
