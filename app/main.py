@@ -4,6 +4,7 @@ from flask import Blueprint, redirect, render_template, url_for, request, sessio
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from . import socketio
 from .helper import *
+from .generator import generate_room_code
 from .database import *
 
 MIN_PLAYER_COUNT = 4

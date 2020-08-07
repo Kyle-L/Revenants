@@ -1,48 +1,48 @@
 {
-    "roles": {
-        "regular": {
-            "name": "villager",
-            "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
-            "action": {
-                "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-                "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
-            }
-        },
-        "traitor": {
-            "name": "traitor",
-            "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
-            "action": {
-                "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-                "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
-            }
-        },
-        "healer": {
-            "name": "doctor",
-            "description": "Also a villager, the doctor has the ability to heal themselves or another villager when called awake by the Moderator during the night. Should they heal themselves, then will be safe from being killed by the revenants, or should they want to prove themselves the doctor or fear the death of a fellow villager, can opt to heal them instead. Again, the strategy here is up to you.",
-            "action": {
-                "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-                "night": ""
-            }
-        },
-        "prophet": {
-            "name": "seer",
-            "description": "The seer, while first and foremost a villager, has the added ability to see who the revenants are once night falls. The seer can then choose to keep this information a secret during the day, or reveal themselves as the seer and use the knowledge they gained during the night in their defense or to their advantage during the day. The strategy here is up to you.",
-            "action": {
-                "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-                "night": "Choose a villager whom you wish to know their true identity."
-            }
-        },
-        "antagonist": {
-            "name": "revenant",
-            "description": "Only a single player is the revenant. Though, they can have allies (however, they don't know who their allies are) if enough players are present in the game. The goal of the revenants is to decide on one villager to secretly kill off during the night, while posing as villagers during the day so they're not killed off themselves. One by one they'll kill off villagers and win when there are either the same number of villagers and revenants (and revenant allies) left, or all the villagers have died. This role is the hardest of all to maintain, because these players are lying for the duration of the game.",
-            "action": {
-                "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-                "night": "Choose a villager to kill."
-            }
-        }
+  "roles": {
+    "regular": {
+      "name": "villager",
+      "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
+      "action": {
+        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
+        "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
+      }
     },
-    "win_messages": {
-        "good": "In the end, the villagers banded together and through the of power self-interest defeated the revenants.",
-        "bad": "In the end, the revenants got their revenge and claimed the entire village."
+    "traitor": {
+      "name": "traitor",
+      "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
+      "action": {
+        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
+        "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
+      }
+    },
+    "healer": {
+      "name": "doctor",
+      "description": "Also a villager, the doctor has the ability to heal themselves or another villager when called awake by the Moderator during the night. Should they heal themselves, then will be safe from being killed by the revenants, or should they want to prove themselves the doctor or fear the death of a fellow villager, can opt to heal them instead. Again, the strategy here is up to you.",
+      "action": {
+        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
+        "night": ""
+      }
+    },
+    "prophet": {
+      "name": "seer",
+      "description": "The seer, while first and foremost a villager, has the added ability to see who the revenants are once night falls. The seer can then choose to keep this information a secret during the day, or reveal themselves as the seer and use the knowledge they gained during the night in their defense or to their advantage during the day. The strategy here is up to you.",
+      "action": {
+        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
+        "night": "Choose a villager whom you wish to know their true identity."
+      }
+    },
+    "antagonist": {
+      "name": "revenant",
+      "description": "Only a single player is the revenant. Though, they can have allies (however, they don't know who their allies are) if enough players are present in the game. The goal of the revenants is to decide on one villager to secretly kill off during the night, while posing as villagers during the day so they're not killed off themselves. One by one they'll kill off villagers and win when there are either the same number of villagers and revenants (and revenant allies) left, or all the villagers have died. This role is the hardest of all to maintain, because these players are lying for the duration of the game.",
+      "action": {
+        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
+        "night": "Choose a villager to kill."
+      }
     }
+  },
+  "win_messages": {
+    "good": "In the end, the villagers banded together and through the of power self-interest defeated the revenants.",
+    "bad": "In the end, the revenants got their revenge and claimed the entire village."
+  }
 }
