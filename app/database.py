@@ -188,9 +188,8 @@ def get_players_string_win(room: str) -> list:
     """
     li = []
     for player in get_players(room):
-        survival_status = 'survived' if player.is_alive else 'is dead'
         li.append(
-            f'{player.character_name} ({player.username}) was a {get_role_name(player.role)} and {survival_status}.')
+            f'{player.character_name} ({player.username}) was a {get_role_name(player.role)} and {get_player_end_status(player.is_alive)}.')
     return li
 
 

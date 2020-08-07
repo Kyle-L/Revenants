@@ -44,5 +44,23 @@
   "win_messages": {
     "good": "In the end, the villagers banded together and through the of power self-interest defeated the revenants.",
     "bad": "In the end, the revenants got their revenge and claimed the entire village."
+  },
+  "player_end_status": {
+    "alive": "survived",
+    "dead": "died"
+  },
+  "result_messages_general": {
+    "attacked": "was attacked by a revenant.",
+    "died": "has died from their injuries.",
+    "protected": "was protected by fellow villagers.",
+    "killed": "was suspected of treachery and lynched by their fellow villagers.",
+    "healed": "was healed of their injuries."
+  },
+  "result_messages_private": {
+    "attacked": "You were attacked by a revenant.",
+    "died": "You have died from your injuries.",
+    "protected": "You were protected by fellow villagers.",
+    "killed": "You were suspected of treachery and lynched by your fellow villagers.",
+    "healed": "You were healed of your injuries."
   }
 }
