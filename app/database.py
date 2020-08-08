@@ -3,6 +3,7 @@ from .models import *
 from random import shuffle
 from .helper import *
 from .generator import *
+import random
 
 ses = db.session
 
@@ -310,20 +311,23 @@ def assign_roles(room: str):
     Args:
         room (str): The room code of the players being assigned a role.
     """
-    antag_num = 1
-    prophet_num = 1
-
     players = get_players(room)
+
+    antag_num = int(len(players) / 3) - 1
+    special_num = int(len(players) / 3)
+
     indices = list(range(len(players)))
     shuffle(indices)
 
+    players[indices.pop()].role = 'antagonist'
+
     while antag_num > 0:
-        players[indices.pop()].role = 'antagonist'
+        players[indices.pop()].role = random.choice(['traitor'])
         antag_num -= 1
 
-    while prophet_num > 0:
-        players[indices.pop()].role = 'prophet'
-        prophet_num -= 1
+    while special_num > 0:
+        players[indices.pop()].role = random.choice(['prophet', 'doctor'])
+        special_num -= 1
 
     while len(indices) > 0:
         players[indices.pop()].role = 'regular'

@@ -77,7 +77,7 @@ def get_player_end_status(status: bool) -> str:
     Returns:
         str: The corresponding end status from the game-info json.
     """
-    return game_info_json[player_end_status]['alive' if status else 'dead']
+    return game_info_json['player_end_status']['alive' if status else 'dead']
 
 
 def get_win_message(is_good: bool) -> str:

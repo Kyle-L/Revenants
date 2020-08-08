@@ -1,66 +1,66 @@
 {
   "roles": {
     "regular": {
-      "name": "villager",
-      "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
+      "name": "Villager",
+      "description": "The most commonplace role, a simple Villager, spends the game trying to root out who they believe the Revenant (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they are a werewolf. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. One of the unique perks of the Villager role is that during the night, a Villager can choose to protect another Villager from a Revenant. The player who is protected by the most Villagers (they must at minimum be protected by two) will survive the night.",
       "action": {
-        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-        "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
+        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "night": "Choose another Villager to protect from a Revenant. The player who is protected by the most Villagers (they must at minimum be protected by two) will survive the night."
       }
     },
     "traitor": {
-      "name": "traitor",
-      "description": "The most commonplace role, a simple villanger, spends the game trying to root out who they believe the revenants (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they're a revenant. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. During the night, if 2 or more villagers protect another villager, they can prevent the death of an attacked villager.",
+      "name": "indebted",
+      "description": "This role, while first and foremost taking on all the elements of a regular Villager throughout the game, also has the additional burden being indebted to the Revenant. As a result, this role will not know whom the Revenant is, but they will be required to play on the side of the Revenant and ensure their protection while also not reveal that they are working for them. This role is unique in the fact that still must play as a Villager but against other Villagers.",
       "action": {
-        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-        "night": "Choose a villager to protect. If a villager is protected by 2 or more villagers, they will survive the night."
+        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "night": "Choose another Villager to protect from a Revenant. The player who is protected by the most Villagers (they must at minimum be protected by two) will survive the night."
       }
     },
     "healer": {
-      "name": "doctor",
-      "description": "Also a villager, the doctor has the ability to heal themselves or another villager when called awake by the Moderator during the night. Should they heal themselves, then will be safe from being killed by the revenants, or should they want to prove themselves the doctor or fear the death of a fellow villager, can opt to heal them instead. Again, the strategy here is up to you.",
+      "name": "Doctor",
+      "description": "Also a Villager, the Doctor has the ability to heal themselves or another Villager during the night. Should they heal themselves, then will be safe from being killed by the Revenant, or should they want to prove themselves the Doctor or fear the death of a fellow Villager, can opt to heal them instead. Again, the strategy here is up to you.",
       "action": {
-        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-        "night": ""
+        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "night": "Choose a Villager (or yourself) to heal. If a the player who is chosen to be healed is attacked by a Revenant, you will heal their (or your own) injuries and survive the night."
       }
     },
     "prophet": {
-      "name": "seer",
-      "description": "The seer, while first and foremost a villager, has the added ability to see who the revenants are once night falls. The seer can then choose to keep this information a secret during the day, or reveal themselves as the seer and use the knowledge they gained during the night in their defense or to their advantage during the day. The strategy here is up to you.",
+      "name": "Soothsayer",
+      "description": "The Soothsayer, while first and foremost a Villager, has the added ability to ‘see’ who the Revenant is once night falls. The Soothsayer choose any other fellow Villager and ascertain whether or not they are indeed the Revenant. The Soothsayer can then choose to keep this information a secret during the day or reveal themselves as the Soothsayer and use the knowledge they gained during the night in their defense or to their advantage during the day. The strategy here is up to you.",
       "action": {
-        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-        "night": "Choose a villager whom you wish to know their true identity."
+        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "night": "Choose a Villager whom you wish to know whether they are Revenant or not."
       }
     },
     "antagonist": {
-      "name": "revenant",
-      "description": "Only a single player is the revenant. Though, they can have allies (however, they don't know who their allies are) if enough players are present in the game. The goal of the revenants is to decide on one villager to secretly kill off during the night, while posing as villagers during the day so they're not killed off themselves. One by one they'll kill off villagers and win when there are either the same number of villagers and revenants (and revenant allies) left, or all the villagers have died. This role is the hardest of all to maintain, because these players are lying for the duration of the game.",
+      "name": "Revenant",
+      "description": "Only a single player is the Revenant. Though, they can have allies if enough players are present in the game, they don't know who their allies are. The goal of the Revenant is to decide on one Villager to secretly kill off during the night, while posing as a Villager during the day so they are not killed off themselves. One by one they will kill off their fellow Villagers until there are either the same number of Villagers and Revenant with their allies left, or all the Villagers have died. This role is the hardest of all to maintain, because these players are lying for the duration of the game.",
       "action": {
-        "day": "Please take a moment to discuss whom you believe is the revenant and then vote on a villager to kill.",
-        "night": "Choose a villager to kill."
+        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "night": "Choose a Villager to attack."
       }
     }
   },
   "win_messages": {
-    "good": "In the end, the villagers banded together and through the of power self-interest defeated the revenants.",
-    "bad": "In the end, the revenants got their revenge and claimed the entire village."
+    "good": "In the end, the Villagers banded together and through the of power self-interest defeated the Revenants.",
+    "bad": "In the end, the Revenants got their revenge and claimed the entire village."
   },
   "player_end_status": {
     "alive": "survived",
     "dead": "died"
   },
   "result_messages_general": {
-    "attacked": "was attacked by a revenant.",
+    "attacked": "was attacked by a Revenant.",
     "died": "has died from their injuries.",
-    "protected": "was protected by fellow villagers.",
-    "killed": "was suspected of treachery and lynched by their fellow villagers.",
+    "protected": "was protected by fellow Villagers.",
+    "killed": "was suspected of treachery and lynched by their fellow Villagers.",
     "healed": "was healed of their injuries."
   },
   "result_messages_private": {
-    "attacked": "You were attacked by a revenant.",
+    "attacked": "You were attacked by a Revenant.",
     "died": "You have died from your injuries.",
-    "protected": "You were protected by fellow villagers.",
-    "killed": "You were suspected of treachery and lynched by your fellow villagers.",
+    "protected": "You were protected by fellow Villagers.",
+    "killed": "You were suspected of treachery and lynched by your fellow Villagers.",
     "healed": "You were healed of your injuries."
   }
 }

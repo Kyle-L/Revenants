@@ -60,7 +60,7 @@ def game():
 
 
 @socketio.on('join')
-def joined():
+def joined(data):
     """ Called when a client connects.
     """
 
@@ -219,14 +219,15 @@ def start_round(room: str, round_name: str, is_day: bool):
 
     players = get_players(room)
     for player in players:
+        skip_id = ''
         payload = {
             'time': 5,
             'message': f'{round_name} starting in...',
             'state_html': 'round',
             'state_name': round_name,
             'role_action': get_role_action(player.role, is_day),
-            'players_names': get_players_string(room, player.id),
-            'players_ids': get_players_ids(room, player.id),
+            'players_names': get_players_string(room, skip_id),
+            'players_ids': get_players_ids(room, skip_id),
             'alive': player.is_alive
 
         }
@@ -273,7 +274,9 @@ def process_choices_night(room: str):
 
         elif player.role == 'prophet':
             # Update the personal result dict for the player who is a prophet.
-            result_private_dict[player.id].append([f'{get_player_string(player.chosen_player)} is a {get_role_name(get_player(player.chosen_player).role)}'])
+            is_antag = 'is the ' if get_player(player.chosen_player).role == 'antagonist' else 'is not the '
+            is_antag += get_role_name('antagonist').capitalize()
+            result_private_dict[player.id].append([f'{get_player_string(player.chosen_player)} {is_antag}.'])
 
     # Unmark the protected player if they've been marked by the antagonist.
     player_protected = max(protect_dict.items(), key=operator.itemgetter(1))[0]
