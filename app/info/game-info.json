@@ -4,7 +4,7 @@
       "name": "Villager",
       "description": "The most commonplace role, a simple Villager, spends the game trying to root out who they believe the Revenant (and other Villagers) are. While they do not need to lie, the role requires players to keenly sense and point out the flaws or mistakes of their fellow players. Someone is speaking too much? Could mean they are a werewolf. Someone isn't speaking enough? Could mean the same thing. It all depends on the people you're playing with, and how well you know them. One of the unique perks of the Villager role is that during the night, a Villager can choose to protect another Villager from a Revenant. The player who is protected by the most Villagers (they must at minimum be protected by two) will survive the night.",
       "action": {
-        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "day": "Revenants are amongst your village. Take a moment to discuss whom you believe is a Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
         "night": "Choose another Villager to protect from a Revenant. The player who is protected by the most Villagers (they must at minimum be protected by two) will survive the night."
       }
     },
@@ -12,7 +12,7 @@
       "name": "indebted",
       "description": "This role, while first and foremost taking on all the elements of a regular Villager throughout the game, also has the additional burden being indebted to the Revenant. As a result, this role will not know whom the Revenant is, but they will be required to play on the side of the Revenant and ensure their protection while also not reveal that they are working for them. This role is unique in the fact that still must play as a Villager but against other Villagers.",
       "action": {
-        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "day": "Revenants are amongst your village. Take a moment to discuss whom you believe is a Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
         "night": "Choose another Villager to protect from a Revenant. The player who is protected by the most Villagers (they must at minimum be protected by two) will survive the night."
       }
     },
@@ -20,7 +20,7 @@
       "name": "Doctor",
       "description": "Also a Villager, the Doctor has the ability to heal themselves or another Villager during the night. Should they heal themselves, then will be safe from being killed by the Revenant, or should they want to prove themselves the Doctor or fear the death of a fellow Villager, can opt to heal them instead. Again, the strategy here is up to you.",
       "action": {
-        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "day": "Revenants are amongst your village. Take a moment to discuss whom you believe is a Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
         "night": "Choose a Villager (or yourself) to heal. If a the player who is chosen to be healed is attacked by a Revenant, you will heal their (or your own) injuries and survive the night."
       }
     },
@@ -28,15 +28,15 @@
       "name": "Soothsayer",
       "description": "The Soothsayer, while first and foremost a Villager, has the added ability to ‘see’ who the Revenant is once night falls. The Soothsayer choose any other fellow Villager and ascertain whether or not they are indeed the Revenant. The Soothsayer can then choose to keep this information a secret during the day or reveal themselves as the Soothsayer and use the knowledge they gained during the night in their defense or to their advantage during the day. The strategy here is up to you.",
       "action": {
-        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "day": "Revenants are amongst your village. Take a moment to discuss whom you believe is a Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
         "night": "Choose a Villager whom you wish to know whether they are Revenant or not."
       }
     },
     "antagonist": {
       "name": "Revenant",
-      "description": "Only a single player is the Revenant. Though, they can have allies if enough players are present in the game, they don't know who their allies are. The goal of the Revenant is to decide on one Villager to secretly kill off during the night, while posing as a Villager during the day so they are not killed off themselves. One by one they will kill off their fellow Villagers until there are either the same number of Villagers and Revenant with their allies left, or all the Villagers have died. This role is the hardest of all to maintain, because these players are lying for the duration of the game.",
+      "description": "Typically Revenants are outnumbered by Villagers 2 to 1. So a game of 6 players would have 2 Revenants. Moreover, Revenants don't know who their fellow allies are. The goal of the Revenants is to decide on Villagers to secretly kill off during the night, while posing as a Villager during the day so they are not killed off themselves. They all have to avoid killing each over if enough Revenants are present. One by one they will kill off their fellow Villagers until there are either the same number of Villagers and Revenants with their allies left, or all the Villagers have died. This role is the hardest of all to maintain, because these players are lying for the duration of the game as well as trying to avoid killing their allies.",
       "action": {
-        "day": "A Revenant is amongst your village. Take a moment to discuss whom you believe the Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
+        "day": "Revenants are amongst your village. Take a moment to discuss whom you believe is a Revenant is and then proceed to vote on who should be lynched in order to protect the village.",
         "night": "Choose a Villager to attack."
       }
     }

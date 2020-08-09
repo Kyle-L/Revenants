@@ -16,6 +16,9 @@ app = Blueprint('main', __name__)
 def how_to_play():
     return render_template('how-to-play.html')
 
+@app.route('/how-to-play/roles')
+def roles():
+    return render_template('roles.html')
 
 @app.route('/license')
 def license():
@@ -102,7 +105,7 @@ def left():
     emit('update_players', {
          'players': get_players_string_lobby(room)}, room=room)
 
-    if len(get_players(room)) < MIN_PLAYER_COUNT and get_room_state(room) != 'lobby':
+    if len(get_players(room)) < MIN_PLAYER_COUNT and len(get_players(room)) > 0 and get_room_state(room) != 'lobby':
         return_to_lobby(room)
 
 
