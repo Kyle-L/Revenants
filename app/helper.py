@@ -31,7 +31,7 @@ def get_role_description(role: str) -> str:
     return game_info_json['roles'][role.lower()]['description']
 
 
-def get_role_action(role: str, is_day: bool) -> str:
+def get_role_action(role: str, is_day: bool, round: int = 0) -> str:
     """Gets the action description for a role.
 
     Args:
@@ -41,7 +41,7 @@ def get_role_action(role: str, is_day: bool) -> str:
     Returns:
         str: The corresponding action description from the game-info json.
     """
-    return game_info_json['roles'][role.lower()]['action']['day' if is_day else 'night']
+    return game_info_json['roles'][role.lower()]['action']['first_round' if round == 1 else ('day' if is_day else 'night')]
 
 
 def get_result_message_general(result: str) -> str:

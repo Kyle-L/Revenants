@@ -260,6 +260,20 @@ def get_ready_count_string(room: str) -> str:
                 ready_count += 1
     return f'{ready_count}/{player_count}'
 
+def increment_round_count(room: str):
+    """Increments the round count of a room.
+
+    Args:
+        room (str): The room code of a room.
+    
+    Returns:
+        str: The roud count.
+    """
+    room = Rooms.query.filter(Rooms.code == room).first()
+    room.round_count += 1
+    ses.commit()
+    return room.round_count
+
 
 def get_room_state(room: str) -> str:
     """Returns the state a room is currently in.
@@ -274,6 +288,17 @@ def get_room_state(room: str) -> str:
     room = Rooms.query.filter(Rooms.code == room).first()
     return room.game_state if room else state
 
+def get_round_count(room: str) -> str:
+    """Returns the current round count.
+
+    Args:
+        room (str): The room code of a room.
+
+    Returns:
+        str: The roud count.
+    """
+    room = Rooms.query.filter(Rooms.code == room).first()
+    return room.round_count
 
 def update_room_state(room: str, state: str):
     """Updates the state a room is currently in.
@@ -283,6 +308,18 @@ def update_room_state(room: str, state: str):
         state (str): The new state of the room.
     """
     Rooms.query.filter(Rooms.code == room).first().game_state = state.lower()
+    ses.commit()
+
+
+def reset_room(room: str):
+    """Resets a room to the default fields.
+
+    Args:
+        room (str): The room code of the room being reset.
+    """
+    room = Rooms.query.filter(Rooms.code == room).first()
+    room.game_state = "lobby"
+    room.round_count = 0
     ses.commit()
 
 
@@ -326,7 +363,7 @@ def assign_roles(room: str):
         antag_num -= 1
 
     while special_num > 0:
-        players[indices.pop()].role = random.choice(['prophet', 'doctor'])
+        players[indices.pop()].role = random.choice(['prophet', 'healer'])
         special_num -= 1
 
     while len(indices) > 0:

@@ -3,6 +3,7 @@ from . import db
 class Rooms(db.Model):
     code = db.Column(db.String(4), primary_key=True)
     game_state = db.Column(db.String(24), unique=False, nullable=False, default='lobby')
+    round_count = db.Column(db.Integer, unique=False, nullable=False, default=0)
 
 
 class Players(db.Model):

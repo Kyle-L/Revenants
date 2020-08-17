@@ -219,6 +219,7 @@ def start_round(room: str, round_name: str, is_day: bool):
     print(f'[{room}] Starting {round_name.lower()}.')
 
     update_room_state(room, round_name.lower())
+    count = increment_round_count(room)
 
     players = get_players(room)
     for player in players:
@@ -228,7 +229,7 @@ def start_round(room: str, round_name: str, is_day: bool):
             'message': f'{round_name} starting in...',
             'state_html': 'round',
             'state_name': round_name,
-            'role_action': get_role_action(player.role, is_day),
+            'role_action': get_role_action(player.role, is_day, count),
             'players_names': get_players_string(room, skip_id),
             'players_ids': get_players_ids(room, skip_id),
             'alive': player.is_alive
@@ -255,18 +256,25 @@ def process_choices_night(room: str):
     protect_dict = {}
 
     players = get_players(room)
+    count = get_role_count(room)
 
     # The first loop through the players' list will process actions that should happen 1st.
     for player in players:
-        if player.role == 'antagonist':
-            # Marks the player to be killed.
-            update_player_marked(player.chosen_player, True)
+        if 'antagonist' in player.role:
+            if ('crazed' not in player.role) and count == 1:
+                is_a = 'is a ' + get_role_name('antagonist').capitalize()
+                result_private_dict[player.id].append([f'{get_player_string(player.chosen_player)} {is_antag}.'])
+            else:
+                # Sets the kill status, it is random if the antagonist is crazed.
+                kill_status = True if 'crazed' not in player.role else bool(random.getrandbits(1))
+                
+                # Marks the player to be killed.
+                update_player_marked(player.chosen_player, kill_status)
 
-            # Adds to the general and private results so that players know what happened to the village and them.
-            result = 'attacked'
-            result_general_list.append(f'{get_player_string(player.chosen_player)} {get_result_message_general(result)}')
-            result_private_dict[player.chosen_player].append(get_result_message_private(result))
-
+                # Adds to the general and private results so that players know what happened to the village and them.
+                result = 'attacked' if kill_status else 'failed to attack'
+                result_general_list.append(f'{get_player_string(player.chosen_player)} {get_result_message_general(result)}')
+                result_private_dict[player.chosen_player].append(get_result_message_private(result))
 
         elif player.role == 'regular':
             # Update the dictionary representing how many regulars are protecting someone.
@@ -277,7 +285,7 @@ def process_choices_night(room: str):
 
         elif player.role == 'prophet':
             # Update the personal result dict for the player who is a prophet.
-            is_antag = 'is the ' if get_player(player.chosen_player).role == 'antagonist' else 'is not the '
+            is_antag = 'is the ' if 'antagonist' in get_player(player.chosen_player).role else 'is not the '
             is_antag += get_role_name('antagonist').capitalize()
             result_private_dict[player.id].append([f'{get_player_string(player.chosen_player)} {is_antag}.'])
 
@@ -293,7 +301,7 @@ def process_choices_night(room: str):
 
     # The second loop through the players' list will process actions that should happen 2nd.
     for player in players:
-        if player.role == 'doctor':
+        if player.role == 'healer':
             update_player_marked(player.chosen_player, False)
 
             # Adds to the general and private results so that players know what happened to the village and them.
@@ -428,4 +436,5 @@ def reset_game(room: str):
     """
 
     reset_players(room)
+    reset_room(room)
     emit('update_players', {'players': get_players_string_lobby(room)}, room=room)
