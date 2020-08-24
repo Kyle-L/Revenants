@@ -25,13 +25,13 @@ This repository is for the development of a web application game similiar to tha
 
 <a name="play"/></a>
 ## Play
-You can play the game at [revenants.kylelierer.com](revenants.kylelierer.com) or by scanning the following QR Code...
-![QR Code to revenants.kylelierer.com](app/static/images/revenants-qr-color.png)
+You can play the game at [revenants.kylelierer.com](https://revenants.kylelierer.com/) or by scanning the following QR Code...
+![QR Code to revenants.kylelierer.com](docs/screenshots/repository-open-graph-transperant.png)
 
 <a name="requirements"/></a>
 ## Requirements
 - [ ] Git
-- [ ] Python3
+- [ ] Python 3.7.3
 - [ ] Postgres
 - [ ] An IDE of your choice
 
