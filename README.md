@@ -1,7 +1,6 @@
 ## Revenants
 
 - [Overview](#overview)
-- [Tech Stack](#stack)
 - [Media](#media)
 - [Play](#play)
 - [Requirements](#requirements)
@@ -10,14 +9,7 @@
 
 <a name="overview"/></a>
 ## Overview
-This repository is for the development of a web application game similiar to that of the classic card game Mafia. 
-
-<a name="stack"/></a>
-## Tech Stack
-- [ ] Python
-- [ ] Flask
-- [ ] Socketio
-- [ ] PostgreSQL
+This repository is for the development of a web application game similar  to that of the classic card game Mafia. 
 
 <a name="media"/></a>
 ## Media
@@ -32,7 +24,7 @@ You can play the game at [revenants.kylelierer.com](https://revenants.kylelierer
 ## Requirements
 - [ ] Git
 - [ ] Python 3.7.3
-- [ ] Postgres
+- [ ] PostgreSQL
 - [ ] An IDE of your choice
 
 <a name="setup"/></a>
