@@ -350,17 +350,21 @@ def assign_roles(room: str):
     """
     players = get_players(room)
 
-    antag_num = int(len(players) / 3) - 1
+    antag_num = int(len(players) / 3)
+    balances = (len(players) / 2) - antag_num
     special_num = int(len(players) / 3)
 
     indices = list(range(len(players)))
+
     shuffle(indices)
 
-    players[indices.pop()].role = 'antagonist'
-
     while antag_num > 0:
-        players[indices.pop()].role = random.choice(['traitor'])
+        players[indices.pop()].role = random.choice(['antagonist'])
         antag_num -= 1
+
+    while balances > 0:
+        players[indices.pop()].role = random.choice(['fool', 'traitor'])
+        balances -= 1
 
     while special_num > 0:
         players[indices.pop()].role = random.choice(['prophet', 'healer'])
@@ -387,10 +391,11 @@ def get_role_count(room: str):
     players = get_players(room)
     for player in players:
         if player.is_alive:
-            if player.role == 'antagonist':
+            if 'antagonist' in player.role:
                 count_antag += 1
-            else:
+            elif player.role != 'traitor':
                 count_rest += 1
+                
     return count_antag, count_rest
 
 

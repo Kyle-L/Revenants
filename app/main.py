@@ -289,6 +289,12 @@ def process_choices_night(room: str):
             is_antag += get_role_name('antagonist').capitalize()
             result_private_dict[player.id].append([f'{get_player_string(player.chosen_player)} {is_antag}.'])
 
+        elif player.role == 'fool':
+            # Update the personal result dict for the player who is a prophet.
+            is_antag = 'is the ' if bool(random.getrandbits(1)) else 'is not the '
+            is_antag += get_role_name('antagonist').capitalize()
+            result_private_dict[player.id].append([f'{get_player_string(player.chosen_player)} {is_antag}.'])
+
     # Unmark the protected player if they've been marked by the antagonist.
     player_protected = max(protect_dict.items(), key=operator.itemgetter(1))[0]
     if protect_dict[player_protected] > 1:
@@ -385,7 +391,7 @@ def process_win_conditions(room: str, players: list, state: str, state_name: str
             'message': f'{state_name} results showing in...',
             'state_html': 'win',
             'state_name': get_role_name('antagonist').capitalize() + 's Win!',
-            'win_message': f'{get_win_message(True)}',
+            'win_message': f'{get_win_message(False)}',
             'players': get_players_string_win(room)
         }
 
@@ -402,7 +408,7 @@ def process_win_conditions(room: str, players: list, state: str, state_name: str
             'message': f'{state_name} results showing in...',
             'state_html': 'win',
             'state_name': get_role_name('regular').capitalize() + 's Win!',
-            'win_message': f'{get_win_message(False)}',
+            'win_message': f'{get_win_message(True)}',
             'players': get_players_string_win(room)
         }
 
