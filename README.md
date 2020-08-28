@@ -1,7 +1,9 @@
 ## Revenants
+[![Link to https://revenants.kylelierer.com](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Frevenants.kylelierer.com%2F)](https://revenants.kylelierer.com/)
+[![Last commit to master](https://img.shields.io/github/last-commit/Kyle-L/Revenants?label=last%20commit%20to%20master)](https://github.com/Kyle-L/Revenants/commits/master)
+##
 
 - [Overview](#overview)
-- [Tech Stack](#stack)
 - [Media](#media)
 - [Play](#play)
 - [Requirements](#requirements)
@@ -10,14 +12,7 @@
 
 <a name="overview"/></a>
 ## Overview
-This repository is for the development of a web application game similiar to that of the classic card game Mafia. 
-
-<a name="stack"/></a>
-## Tech Stack
-- [ ] Python
-- [ ] Flask
-- [ ] Socketio
-- [ ] PostgreSQL
+This repository is for the development of a web application game similar  to that of the classic card game Mafia. 
 
 <a name="media"/></a>
 ## Media
@@ -25,14 +20,14 @@ This repository is for the development of a web application game similiar to tha
 
 <a name="play"/></a>
 ## Play
-You can play the game at [revenants.kylelierer.com](revenants.kylelierer.com) or by scanning the following QR Code...
-![QR Code to revenants.kylelierer.com](app/static/images/revenants-qr-color.png)
+You can play the game at [revenants.kylelierer.com](https://revenants.kylelierer.com/) or by scanning the following QR Code...
+![QR Code to revenants.kylelierer.com](docs/screenshots/repository-open-graph-transperant.png)
 
 <a name="requirements"/></a>
 ## Requirements
 - [ ] Git
-- [ ] Python3
-- [ ] Postgres
+- [ ] Python 3.7.3
+- [ ] PostgreSQL
 - [ ] An IDE of your choice
 
 <a name="setup"/></a>
