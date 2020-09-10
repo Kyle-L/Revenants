@@ -112,6 +112,10 @@ div.hidden {
   display: none;
 }
 
+.sekiro {
+  color: 68747470733a2f2f7777772e68756d626c6562756e646c652e636f6d2f3f676966743d555a707750574b7063616e593248714d;
+}
+
 /* Show the indicator (dot/circle) when checked */
 .radio-container input:checked ~ .checkmark:after {
   display: block;
