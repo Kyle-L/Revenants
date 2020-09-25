@@ -1,6 +1,8 @@
 ## Revenants
 [![Link to https://revenants.kylelierer.com](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Frevenants.kylelierer.com%2F)](https://revenants.kylelierer.com/)
-[![Last commit to master](https://img.shields.io/github/last-commit/Kyle-L/Revenants?label=last%20commit%20to%20master)](https://github.com/Kyle-L/Revenants/commits/master)
+[![Last commit to master](https://img.shields.io/github/last-commit/Kyle-L/Revenants?label=last%20commit%20to%20master)](https://github.com/Kyle-L/Revenants/commits/master)  
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Kyle-L/Revenants)
+
 ##
 
 - [Overview](#overview)
